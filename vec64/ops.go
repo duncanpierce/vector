@@ -36,6 +36,15 @@ func Blend[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
 	return
 }
 
+func Zero[T constraintsExt.Number](m mask.Bits, a [N]T) (r [N]T) {
+	m.For(N, func(i int, c bool) {
+		if !c {
+			r[i] = a[i]
+		}
+	})
+	return
+}
+
 func Broadcast[T constraintsExt.Number](m mask.Bits, a T) (r [N]T) {
 	m.ForTrue(N, func(i int) {
 		r[i] = a

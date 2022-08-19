@@ -57,6 +57,20 @@ func (m Bits) Not() (r Bits) {
 	return
 }
 
+func (m Bits) Any() bool {
+	return m.v != 0
+}
+
+func (m Bits) ShiftLeft(i int) (r Bits) {
+	r.v = m.v << i
+	return
+}
+
+func (m Bits) ShiftRight(i int) (r Bits) {
+	r.v = m.v >> i
+	return
+}
+
 func (m Bits) ForTrue(n int, f func(i int)) {
 	if n > size {
 		n = size
