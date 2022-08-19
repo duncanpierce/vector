@@ -3,53 +3,53 @@ package vec2
 import (
 	"golang.org/x/exp/constraints"
 	"math"
-	"vector/condition"
 	"vector/constraintsExt"
+	"vector/mask"
 )
 
-func Add[T constraintsExt.Number](m condition.Mask, a, b [N]T) (r [N]T) {
+func Add[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
 	m.ForTrue(N, func(i int) {
 		r[i] = a[i] + b[i]
 	})
 	return
 }
 
-func Sub[T constraintsExt.Number](m condition.Mask, a, b [N]T) (r [N]T) {
+func Sub[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
 	m.ForTrue(N, func(i int) {
 		r[i] = a[i] - b[i]
 	})
 	return
 }
 
-func Div[T constraintsExt.Number](m condition.Mask, a, b [N]T) (r [N]T) {
+func Div[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
 	m.ForTrue(N, func(i int) {
 		r[i] = a[i] / b[i]
 	})
 	return
 }
 
-func Mul[T constraintsExt.Number](m condition.Mask, a, b [N]T) (r [N]T) {
+func Mul[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
 	m.ForTrue(N, func(i int) {
 		r[i] = a[i] * b[i]
 	})
 	return
 }
 
-func FMA[T constraintsExt.Number](m condition.Mask, a, b, c [N]T) (r [N]T) {
+func FMA[T constraintsExt.Number](m mask.Bits, a, b, c [N]T) (r [N]T) {
 	m.ForTrue(N, func(i int) {
 		r[i] = a[i]*b[i] + c[i]
 	})
 	return
 }
 
-func Neg[T constraintsExt.Number](m condition.Mask, a [N]T) (r [N]T) {
+func Neg[T constraintsExt.Number](m mask.Bits, a [N]T) (r [N]T) {
 	m.ForTrue(N, func(i int) {
 		r[i] = -a[i]
 	})
 	return
 }
 
-func Abs[T constraintsExt.Number](m condition.Mask, a [N]T) (r [N]T) {
+func Abs[T constraintsExt.Number](m mask.Bits, a [N]T) (r [N]T) {
 	m.ForTrue(N, func(i int) {
 		v := a[i]
 		if v < 0 {
@@ -60,7 +60,7 @@ func Abs[T constraintsExt.Number](m condition.Mask, a [N]T) (r [N]T) {
 	return
 }
 
-func Max[T constraintsExt.Number](m condition.Mask, a, b [N]T) (r [N]T) {
+func Max[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
 	m.ForTrue(N, func(i int) {
 		v := a[i]
 		if b[i] > v {
@@ -71,7 +71,7 @@ func Max[T constraintsExt.Number](m condition.Mask, a, b [N]T) (r [N]T) {
 	return
 }
 
-func Min[T constraintsExt.Number](m condition.Mask, a, b [N]T) (r [N]T) {
+func Min[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
 	m.ForTrue(N, func(i int) {
 		v := a[i]
 		if b[i] < v {
@@ -82,14 +82,14 @@ func Min[T constraintsExt.Number](m condition.Mask, a, b [N]T) (r [N]T) {
 	return
 }
 
-func IsInf[T constraints.Float](m condition.Mask, a [N]T, sign int) (r condition.Mask) {
+func IsInf[T constraints.Float](m mask.Bits, a [N]T, sign int) (r mask.Bits) {
 	m.ForTrue(N, func(i int) {
 		r.Set(i, math.IsInf(float64(a[i]), sign))
 	})
 	return
 }
 
-func IsNaN[T constraints.Float](m condition.Mask, a [N]T) (r condition.Mask) {
+func IsNaN[T constraints.Float](m mask.Bits, a [N]T) (r mask.Bits) {
 	m.ForTrue(N, func(i int) {
 		r.Set(i, math.IsNaN(float64(a[i])))
 	})

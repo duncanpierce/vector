@@ -1,6 +1,6 @@
-package condition
+package mask
 
-type Mask struct {
+type Bits struct {
 	v uint64
 }
 
@@ -9,22 +9,22 @@ const (
 	all  = 0xffffffffffffffff
 )
 
-func All() (r Mask) {
-	return Mask{all}
+func All() (r Bits) {
+	return Bits{all}
 }
 
-func One() (r Mask) {
-	return Mask{1}
+func One() (r Bits) {
+	return Bits{1}
 }
 
-func (m Mask) True(i int) bool {
+func (m Bits) True(i int) bool {
 	if m.v&(1<<i) != 0 {
 		return true
 	}
 	return false
 }
 
-func (m Mask) Set(i int, b bool) (r Mask) {
+func (m Bits) Set(i int, b bool) (r Bits) {
 	r.v = m.v &^ (1 << i)
 	if b {
 		r.v |= 1 << i
@@ -32,32 +32,32 @@ func (m Mask) Set(i int, b bool) (r Mask) {
 	return
 }
 
-func (m Mask) And(n Mask) (r Mask) {
+func (m Bits) And(n Bits) (r Bits) {
 	r.v = m.v & n.v
 	return
 }
 
-func (m Mask) AndNot(n Mask) (r Mask) {
+func (m Bits) AndNot(n Bits) (r Bits) {
 	r.v = m.v &^ n.v
 	return
 }
 
-func (m Mask) Or(n Mask) (r Mask) {
+func (m Bits) Or(n Bits) (r Bits) {
 	r.v = m.v | n.v
 	return
 }
 
-func (m Mask) Xor(n Mask) (r Mask) {
+func (m Bits) Xor(n Bits) (r Bits) {
 	r.v = m.v ^ n.v
 	return
 }
 
-func (m Mask) Not(n Mask) (r Mask) {
+func (m Bits) Not() (r Bits) {
 	r.v = m.v ^ all
 	return
 }
 
-func (m Mask) ForTrue(n int, f func(i int)) {
+func (m Bits) ForTrue(n int, f func(i int)) {
 	if n > size {
 		n = size
 	}
@@ -68,7 +68,7 @@ func (m Mask) ForTrue(n int, f func(i int)) {
 	}
 }
 
-func (m Mask) For(n int, f func(i int, c bool)) {
+func (m Bits) For(n int, f func(i int, c bool)) {
 	if n > size {
 		n = size
 	}
