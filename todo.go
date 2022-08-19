@@ -1,4 +1,4 @@
-package vec16
+package vector
 
 /*
 These are trickier to write within Go's generics:
