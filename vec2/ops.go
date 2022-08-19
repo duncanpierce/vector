@@ -2,8 +2,8 @@ package vec2
 
 import (
 	"golang.org/x/exp/constraints"
-	"vec/condition"
-	"vec/constraintsExt"
+	"vector/condition"
+	"vector/constraintsExt"
 )
 
 func Split[T constraintsExt.Number](a [N]T) (r, s [N / 2]T) {

@@ -3,7 +3,7 @@ package vec2
 import (
 	"golang.org/x/exp/constraints"
 	"math/bits"
-	"vec/condition"
+	"vector/condition"
 )
 
 func OnesCount[T constraints.Unsigned](m condition.Mask, a [N]T) (r [N]int) {

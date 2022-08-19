@@ -2,7 +2,7 @@ package vec2
 
 import (
 	"golang.org/x/exp/constraints"
-	"vec/condition"
+	"vector/condition"
 )
 
 func And[T constraints.Integer](m condition.Mask, a, b [N]T) (r [N]T) {

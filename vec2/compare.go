@@ -1,8 +1,8 @@
 package vec2
 
 import (
-	"vec/condition"
-	"vec/constraintsExt"
+	"vector/condition"
+	"vector/constraintsExt"
 )
 
 func Less[T constraintsExt.Number](m condition.Mask, a, b [N]T) (r condition.Mask) {

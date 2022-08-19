@@ -3,7 +3,7 @@ package vec2
 import (
 	"golang.org/x/exp/constraints"
 	"math/bits"
-	"vec/condition"
+	"vector/condition"
 )
 
 func ShiftRight[T, U constraints.Integer](m condition.Mask, a [N]T, b [N]U) (r [N]T) {

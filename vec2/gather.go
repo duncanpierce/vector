@@ -1,8 +1,8 @@
 package vec2
 
 import (
-	"vec/condition"
-	"vec/constraintsExt"
+	"vector/condition"
+	"vector/constraintsExt"
 )
 
 func Gather[T constraintsExt.Number](m condition.Mask, p [N]*T) (r [N]T) {

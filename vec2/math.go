@@ -3,8 +3,8 @@ package vec2
 import (
 	"golang.org/x/exp/constraints"
 	"math"
-	"vec/condition"
-	"vec/constraintsExt"
+	"vector/condition"
+	"vector/constraintsExt"
 )
 
 func Add[T constraintsExt.Number](m condition.Mask, a, b [N]T) (r [N]T) {

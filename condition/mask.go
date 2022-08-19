@@ -5,20 +5,20 @@ type Mask struct {
 }
 
 const (
-	Size = 64
-	all  = uint64(-1)
+	size = 64
+	all  = 0xffffffffffffffff
 )
 
-func (m Mask) All() (r Mask) {
+func All() (r Mask) {
 	return Mask{all}
 }
 
-func (m Mask) One() (r Mask) {
+func One() (r Mask) {
 	return Mask{1}
 }
 
 func (m Mask) True(i int) bool {
-	if m.v&(1<<i) != 1 {
+	if m.v&(1<<i) != 0 {
 		return true
 	}
 	return false
@@ -58,8 +58,8 @@ func (m Mask) Not(n Mask) (r Mask) {
 }
 
 func (m Mask) ForTrue(n int, f func(i int)) {
-	if n > Size {
-		n = Size
+	if n > size {
+		n = size
 	}
 	for i := 0; i < n; i++ {
 		if m.True(i) {
@@ -69,8 +69,8 @@ func (m Mask) ForTrue(n int, f func(i int)) {
 }
 
 func (m Mask) For(n int, f func(i int, c bool)) {
-	if n > Size {
-		n = Size
+	if n > size {
+		n = size
 	}
 	for i := 0; i < n; i++ {
 		f(i, m.True(i))
