@@ -1,11 +1,11 @@
 package vector
 
 import (
+	"github.com/duncanpierce/vector/mask"
+	"github.com/duncanpierce/vector/vec16"
+	"github.com/duncanpierce/vector/vec2"
 	"reflect"
 	"testing"
-	"vector/mask"
-	"vector/vec16"
-	"vector/vec2"
 )
 
 func TestAdd(t *testing.T) {
