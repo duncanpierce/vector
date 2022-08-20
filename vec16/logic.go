@@ -1,8 +1,8 @@
 package vec16
 
 import (
+	"github.com/duncanpierce/vector/mask"
 	"golang.org/x/exp/constraints"
-	"vector/mask"
 )
 
 func And[T constraints.Integer](m mask.Bits, a, b [N]T) (r [N]T) {

@@ -1,9 +1,9 @@
 package vec64
 
 import (
+	"github.com/duncanpierce/vector/mask"
 	"golang.org/x/exp/constraints"
 	"math/bits"
-	"vector/mask"
 )
 
 func OnesCount[T constraints.Unsigned](m mask.Bits, a [N]T) (r [N]int) {

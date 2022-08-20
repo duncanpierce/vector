@@ -1,8 +1,8 @@
 package vec64
 
 import (
-	"vector/constraintsExt"
-	"vector/mask"
+	"github.com/duncanpierce/vector/constraintsExt"
+	"github.com/duncanpierce/vector/mask"
 )
 
 func Gather[T constraintsExt.Number](m mask.Bits, p [N]*T) (r [N]T) {

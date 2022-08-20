@@ -1,8 +1,8 @@
 package vec64
 
 import (
-	"vector/constraintsExt"
-	"vector/mask"
+	"github.com/duncanpierce/vector/constraintsExt"
+	"github.com/duncanpierce/vector/mask"
 )
 
 func Less[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r mask.Bits) {

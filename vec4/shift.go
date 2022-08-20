@@ -1,9 +1,9 @@
 package vec4
 
 import (
+	"github.com/duncanpierce/vector/mask"
 	"golang.org/x/exp/constraints"
 	"math/bits"
-	"vector/mask"
 )
 
 func ShiftRight[T, U constraints.Integer](m mask.Bits, a [N]T, b [N]U) (r [N]T) {

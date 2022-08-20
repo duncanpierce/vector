@@ -2,10 +2,10 @@ package vec2
 
 import (
 	"fmt"
+	"github.com/duncanpierce/vector/constraintsExt"
+	"github.com/duncanpierce/vector/mask"
 	"golang.org/x/exp/constraints"
 	"math/bits"
-	"vector/constraintsExt"
-	"vector/mask"
 )
 
 func Convert[S, T constraintsExt.Number](m mask.Bits, a [N]S) (r [N]T) {

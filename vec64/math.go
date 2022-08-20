@@ -1,10 +1,10 @@
 package vec64
 
 import (
+	"github.com/duncanpierce/vector/constraintsExt"
+	"github.com/duncanpierce/vector/mask"
 	"golang.org/x/exp/constraints"
 	"math"
-	"vector/constraintsExt"
-	"vector/mask"
 )
 
 func Add[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
