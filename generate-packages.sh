@@ -1,13 +1,13 @@
 #!/bin/bash
 
-template=vec2
 exclude=n.go
-
-for pkg in vec4 vec8 vec16 vec32 vec64; do
+templateSize=16
+for otherSize in 2 4 8 32 64; do
+  pkg=vec$otherSize
   find "$pkg" -type f -not -name "$exclude" -exec rm "{}" ";"
   for file in $(basename -a $template/*); do
     if [ $file != $exclude ]; then
-      sed "s/package *vec2/package ${pkg}/" "$template/$file" > ${pkg}/$file
+      sed "s/package *vec$templateSize/package ${pkg}/" "vec$templateSize/$file" | sed "s/Package *vec$templateSize/Package ${pkg}/" > ${pkg}/$file
     fi
   done
 done
