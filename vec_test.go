@@ -70,3 +70,26 @@ func TestInterlace(t *testing.T) {
 		t.Errorf("failed at interlace 8")
 	}
 }
+
+func TestDeinterlace(t *testing.T) {
+	r, s := vec16.Deinterlace(1, [16]int{1, 9, 2, 10, 3, 11, 4, 12, 5, 13, 6, 14, 7, 15, 8, 16})
+	checkDeinterlace(t, r, s)
+
+	r, s = vec16.Deinterlace(2, [16]int{1, 2, 9, 10, 3, 4, 11, 12, 5, 6, 13, 14, 7, 8, 15, 16})
+	checkDeinterlace(t, r, s)
+
+	r, s = vec16.Deinterlace(4, [16]int{1, 2, 3, 4, 9, 10, 11, 12, 5, 6, 7, 8, 13, 14, 15, 16})
+	checkDeinterlace(t, r, s)
+
+	r, s = vec16.Deinterlace(8, [16]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16})
+	checkDeinterlace(t, r, s)
+}
+
+func checkDeinterlace(t *testing.T, r, s [8]int) {
+	if !reflect.DeepEqual(r, [8]int{1, 2, 3, 4, 5, 6, 7, 8}) {
+		t.Errorf("failed on r")
+	}
+	if !reflect.DeepEqual(s, [8]int{9, 10, 11, 12, 13, 14, 15, 16}) {
+		t.Errorf("failed on s")
+	}
+}

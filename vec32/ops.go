@@ -43,6 +43,9 @@ func Broadcast[T constraintsExt.Number](a T) (r [N]T) {
 	return
 }
 
+/*
+Permute returns a masked vector containing elements from b chosen from indices in a. An element from b may appear more than once in the result, or may be absent.
+*/
 func Permute[T constraints.Integer, U constraintsExt.Number](m mask.Bits, a [N]T, b [N]U) (r [N]U) {
 	m.ForTrue(N, func(i int) {
 		r[i] = b[a[i]]
@@ -58,17 +61,33 @@ If n is 2 the first few elements of the result will contain a[0], a[1], b[0], b[
 Panics if n is greater than vector length or is not a power of 2.
 */
 func Interlace[T constraintsExt.Number](n int, a, b [N / 2]T) (r [N]T) {
+	validInterlace(n)
+	for x, y, z := a[:], b[:], r[:]; len(z) > 0; x, y, z = x[n:], y[n:], z[n*2:] {
+		copy(z, x[:n])
+		copy(z[n:], y[:n])
+	}
+	return
+}
+
+/*
+Deinterlace splits a vector into 2 half-length vectors r and s, placing n consecutive elements in r, then n consecutive elements in s.
+This is repeated until all the elements of a are present in r and s.
+This is the reverse of Interlace.
+*/
+func Deinterlace[T constraintsExt.Number](n int, a [N]T) (r, s [N / 2]T) {
+	validInterlace(n)
+	for x, y, z := a[:], r[:], s[:]; len(x) > 0; x, y, z = x[n*2:], y[n:], z[n:] {
+		copy(y, x[:n])
+		copy(z, x[n:n*2])
+	}
+	return
+}
+
+func validInterlace(n int) {
 	if n > N {
 		panic(fmt.Sprintf("n cannot be greater than vector length %v", N))
 	}
 	if bits.OnesCount(uint(n)) != 1 {
 		panic("n must be a power of 2")
 	}
-	x, y, z := a[:], b[:], r[:]
-	for len(z) > 0 {
-		copy(z, x[:n])
-		copy(z[n:], y[:n])
-		x, y, z = x[n:], y[n:], z[n*2:]
-	}
-	return
 }

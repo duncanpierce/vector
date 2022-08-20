@@ -10,6 +10,8 @@
 * Open to extension in future
   * Adding new instructions
   * Adding new vector lengths
+* API should be free of side effects
+* Favour returning a result over passing in a destination pointer
 * Focus on vector lengths that have been implemented in hardware - currently up to 512 bits (e.g. AVX512, Fugaku supercomputer implements Arm SVE at 512 bits)
 * Assume Go compiler can emulate longer vectors on vector hardware by ganging registers or looping
   * Aim for straightforward integration of hardware instructions with larger/wider operations that require fallback implementations in Go
@@ -61,13 +63,13 @@ I am debating whether `Split` and `Join` should exist at all.
 
 ## To do
 
-* Interlace/Deinterlace
 * SwapLanes/SwapHorizontal
 * Horizontal instructions and naming convention
   * "Horizontal" "Across" "All" "Vector" "Lanes"
 * mask.Bits.All() and Bits.ForEach() - easier if we fix mask length
 * Loop tail and alignment operations
 * IsDuplicate() (VPCONFLICT)
+* Should there be a neighbour swap based on mask bits? (1 = swap, 0 = leave)
 
 
 ## Disadvantages
