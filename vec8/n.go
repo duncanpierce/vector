@@ -1,3 +1,3 @@
 package vec8
 
-const N = 2
+const N = 8

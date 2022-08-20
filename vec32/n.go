@@ -1,3 +1,3 @@
 package vec32
 
-const N = 2
+const N = 32

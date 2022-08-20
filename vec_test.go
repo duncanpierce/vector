@@ -1,8 +1,10 @@
 package vector
 
 import (
+	"reflect"
 	"testing"
 	"vector/mask"
+	"vector/vec16"
 	"vector/vec2"
 )
 
@@ -41,5 +43,30 @@ func TestMask(t *testing.T) {
 	}
 	if v[1] != 6 {
 		t.Errorf("got %v", v[1])
+	}
+}
+
+func TestInterlace(t *testing.T) {
+	a := [8]int{1, 2, 3, 4, 5, 6, 7, 8}
+	b := [8]int{9, 10, 11, 12, 13, 14, 15, 16}
+
+	r := vec16.Interlace(1, a, b)
+	if !reflect.DeepEqual(r, [16]int{1, 9, 2, 10, 3, 11, 4, 12, 5, 13, 6, 14, 7, 15, 8, 16}) {
+		t.Errorf("failed at interlace 1")
+	}
+
+	r = vec16.Interlace(2, a, b)
+	if !reflect.DeepEqual(r, [16]int{1, 2, 9, 10, 3, 4, 11, 12, 5, 6, 13, 14, 7, 8, 15, 16}) {
+		t.Errorf("failed at interlace 2")
+	}
+
+	r = vec16.Interlace(4, a, b)
+	if !reflect.DeepEqual(r, [16]int{1, 2, 3, 4, 9, 10, 11, 12, 5, 6, 7, 8, 13, 14, 15, 16}) {
+		t.Errorf("failed at interlace 4")
+	}
+
+	r = vec16.Interlace(8, a, b)
+	if !reflect.DeepEqual(r, [16]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}) {
+		t.Errorf("failed at interlace 8")
 	}
 }

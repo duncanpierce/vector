@@ -4,7 +4,9 @@
 
 * A simple API that does not expose the complexities of the underlying CPU architecture
 * Should not require understanding of the underlying CPU vector instructions or be aware of vector size limits
-* Support for common hardware vector lengths - currently small powers of 2
+* Sympathetic to hardware
+  * Support for common hardware vector lengths - currently small powers of 2
+  * Assume better performance from mixing nearby lanes than far-away lanes, and best performance from operating within lane
 * Open to extension in future
   * Adding new instructions
   * Adding new vector lengths
@@ -32,6 +34,7 @@
 * Utilise packages to represent different vector lengths
   * i.e. favour `vec4.Add(a,b)` over `vec.Add4(a,b)`, `vec.Add8(a,b)`
   * Avoids explosion in the number variants of basic operations in the documentation
+  * All operations on vectors of a specific length are grouped together and documented in a package
 * Control flow is expressed through mask/condition vectors
 * Mask vectors should be opaque in order to support future vector length extension
   * e.g. Arm SVE permits up to 2048 bit vector supporting byte operations, which implies 256-bit masks
@@ -56,6 +59,17 @@ Because I am generating the different vector sizes packages, `vec2.Split` return
 I am debating whether `Split` and `Join` should exist at all.
 
 
+## To do
+
+* Interlace/Deinterlace
+* SwapLanes/SwapHorizontal
+* Horizontal instructions and naming convention
+  * "Horizontal" "Across" "All" "Vector" "Lanes"
+* mask.Bits.All() and Bits.ForEach() - easier if we fix mask length
+* Loop tail and alignment operations
+* IsDuplicate() (VPCONFLICT)
+
+
 ## Disadvantages
 
 * Fallback Go implementations are currently duplicated across different vector sizes
@@ -75,6 +89,8 @@ I am debating whether `Split` and `Join` should exist at all.
     * Pro: removes the need for masks to be opaque in order to support future vector length extension
     * Con: duplicates all the mask operations across each vector size package
     * Con: may make it harder to implement in-vector conditional logic across differing vector sizes (need to resize mask vector)
+    * Pro: we have `Any()` to detect set bits, if mask follows vector size, we can also have `All()`
+    * Pro: would no longer have to pass `N` to `Bits.ForEach()`
 * `Broadcast` should not accept a mask parameter
   * The assumption is that tracking the value of a mask would make it harder for the compiler to fuse a broadcast with another operation
   * Using broadcast without a mask is simpler/shorter for the user
