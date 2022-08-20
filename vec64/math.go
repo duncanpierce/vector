@@ -2,55 +2,54 @@ package vec64
 
 import (
 	"github.com/duncanpierce/vector/constraintsExt"
-	"github.com/duncanpierce/vector/mask"
 	"golang.org/x/exp/constraints"
 	"math"
 )
 
-func Add[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
-	m.ForTrue(N, func(i int) {
+func Add[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+	m.ForTrue(func(i int) {
 		r[i] = a[i] + b[i]
 	})
 	return
 }
 
-func Sub[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
-	m.ForTrue(N, func(i int) {
+func Sub[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+	m.ForTrue(func(i int) {
 		r[i] = a[i] - b[i]
 	})
 	return
 }
 
-func Div[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
-	m.ForTrue(N, func(i int) {
+func Div[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+	m.ForTrue(func(i int) {
 		r[i] = a[i] / b[i]
 	})
 	return
 }
 
-func Mul[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
-	m.ForTrue(N, func(i int) {
+func Mul[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+	m.ForTrue(func(i int) {
 		r[i] = a[i] * b[i]
 	})
 	return
 }
 
-func FMA[T constraintsExt.Number](m mask.Bits, a, b, c [N]T) (r [N]T) {
-	m.ForTrue(N, func(i int) {
+func FMA[T constraintsExt.Number](m Bool, a, b, c [N]T) (r [N]T) {
+	m.ForTrue(func(i int) {
 		r[i] = a[i]*b[i] + c[i]
 	})
 	return
 }
 
-func Neg[T constraintsExt.Number](m mask.Bits, a [N]T) (r [N]T) {
-	m.ForTrue(N, func(i int) {
+func Neg[T constraintsExt.Number](m Bool, a [N]T) (r [N]T) {
+	m.ForTrue(func(i int) {
 		r[i] = -a[i]
 	})
 	return
 }
 
-func Abs[T constraintsExt.Number](m mask.Bits, a [N]T) (r [N]T) {
-	m.ForTrue(N, func(i int) {
+func Abs[T constraintsExt.Number](m Bool, a [N]T) (r [N]T) {
+	m.ForTrue(func(i int) {
 		v := a[i]
 		if v < 0 {
 			v = -v
@@ -60,8 +59,8 @@ func Abs[T constraintsExt.Number](m mask.Bits, a [N]T) (r [N]T) {
 	return
 }
 
-func Max[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
-	m.ForTrue(N, func(i int) {
+func Max[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+	m.ForTrue(func(i int) {
 		v := a[i]
 		if b[i] > v {
 			v = b[i]
@@ -71,8 +70,8 @@ func Max[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
 	return
 }
 
-func Min[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
-	m.ForTrue(N, func(i int) {
+func Min[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+	m.ForTrue(func(i int) {
 		v := a[i]
 		if b[i] < v {
 			v = b[i]
@@ -82,15 +81,15 @@ func Min[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
 	return
 }
 
-func IsInf[T constraints.Float](m mask.Bits, a [N]T, sign int) (r mask.Bits) {
-	m.ForTrue(N, func(i int) {
+func IsInf[T constraints.Float](m Bool, a [N]T, sign int) (r Bool) {
+	m.ForTrue(func(i int) {
 		r.Set(i, math.IsInf(float64(a[i]), sign))
 	})
 	return
 }
 
-func IsNaN[T constraints.Float](m mask.Bits, a [N]T) (r mask.Bits) {
-	m.ForTrue(N, func(i int) {
+func IsNaN[T constraints.Float](m Bool, a [N]T) (r Bool) {
+	m.ForTrue(func(i int) {
 		r.Set(i, math.IsNaN(float64(a[i])))
 	})
 	return

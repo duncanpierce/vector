@@ -1,7 +1,6 @@
 package vector
 
 import (
-	"github.com/duncanpierce/vector/mask"
 	"github.com/duncanpierce/vector/vec16"
 	"github.com/duncanpierce/vector/vec2"
 	"reflect"
@@ -9,7 +8,7 @@ import (
 )
 
 func TestAdd(t *testing.T) {
-	v := vec2.Add(mask.All(), [2]int{3, 4}, [2]int{5, 6})
+	v := vec2.Add(vec2.Full(), [2]int{3, 4}, [2]int{5, 6})
 	if v[0] != 8 {
 		t.Errorf("got %v", v[0])
 	}
@@ -19,7 +18,7 @@ func TestAdd(t *testing.T) {
 }
 
 func TestMax(t *testing.T) {
-	v := vec2.Max(mask.All(), [2]int{3, 4}, [2]int{2, 6})
+	v := vec2.Max(vec2.Full(), [2]int{3, 4}, [2]int{2, 6})
 	if v[0] != 3 {
 		t.Errorf("got %v", v[0])
 	}
@@ -29,7 +28,7 @@ func TestMax(t *testing.T) {
 }
 
 func TestMask(t *testing.T) {
-	v := vec2.Add(mask.One(), [2]int{1, 2}, [2]int{3, 4})
+	v := vec2.Add(vec2.Single(), [2]int{1, 2}, [2]int{3, 4})
 	if v[0] != 4 {
 		t.Errorf("got %v", v[0])
 	}
@@ -37,7 +36,7 @@ func TestMask(t *testing.T) {
 		t.Errorf("got %v", v[1])
 	}
 
-	v = vec2.Add(mask.One().Not(), [2]int{1, 2}, [2]int{3, 4})
+	v = vec2.Add(vec2.Single().Not(), [2]int{1, 2}, [2]int{3, 4})
 	if v[0] != 0 {
 		t.Errorf("got %v", v[0])
 	}

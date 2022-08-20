@@ -57,8 +57,7 @@ vectors. Go compiler intrinsics could implement specific operations like `vec2.A
 allowing unsupported operations like `vec4.Add` to gang 2 operations using shorter vectors.
 This would probably be the best way to structure fallback implementations of the different vector sizes.
 
-Because I am generating the different vector sizes packages, `vec2.Split` returns `[1]T` instead of `T`.
-I am debating whether `Split` and `Join` should exist at all.
+Because I am generating the different vector sizes packages, `vec2.Deinterlace` returns `[1]T` instead of `T`.
 
 
 ## To do
@@ -66,11 +65,10 @@ I am debating whether `Split` and `Join` should exist at all.
 * SwapLanes/SwapHorizontal
 * Horizontal instructions and naming convention
   * "Horizontal" "Across" "All" "Vector" "Lanes"
-* mask.Bits.All() and Bits.ForEach() - easier if we fix mask length
 * Loop tail and alignment operations
 * IsDuplicate() (VPCONFLICT)
 * Should there be a neighbour swap based on mask bits? (1 = swap, 0 = leave)
-* Try vecN.Bool as a name
+* Swap(mask, a,b *[N]T) ? 
 
 ## Disadvantages
 
