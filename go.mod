@@ -1,4 +1,4 @@
-module vector
+module github.com/duncanpierce/vector
 
 go 1.19
 
