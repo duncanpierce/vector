@@ -8,7 +8,7 @@ for otherSize in 2 4 8 32 64; do
   find "$pkg" -type f -not -name "$exclude" -exec rm "{}" ";"
   for file in $(basename -a "$template"/*); do
     if [ $file != $exclude ]; then
-      sed "s/package *$template/package ${pkg}/" "$template/$file" | sed "s/Package *$template/Package ${pkg}/" > ${pkg}/$file
+      sed "s/package *$template/package ${pkg}/" "$template/$file" | sed "s/Package *$template/Package ${pkg}/" | sed "s/arrays of size $templateSize/arrays of size $otherSize/" > ${pkg}/$file
     fi
   done
 done

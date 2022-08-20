@@ -1,7 +1,7 @@
 package vec4
 
 /*
-Package vec4 provides functions for efficiently manipulating fixed-length arrays.
+Package vec4 provides functions for efficiently manipulating fixed-length arrays of size 4.
 
 It is one of several packages, each operating on a single size of array:
 

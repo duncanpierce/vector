@@ -1,7 +1,7 @@
 package vec8
 
 /*
-Package vec8 provides functions for efficiently manipulating fixed-length arrays.
+Package vec8 provides functions for efficiently manipulating fixed-length arrays of size 8.
 
 It is one of several packages, each operating on a single size of array:
 

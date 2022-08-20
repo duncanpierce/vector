@@ -1,7 +1,7 @@
 package vec32
 
 /*
-Package vec32 provides functions for efficiently manipulating fixed-length arrays.
+Package vec32 provides functions for efficiently manipulating fixed-length arrays of size 32.
 
 It is one of several packages, each operating on a single size of array:
 

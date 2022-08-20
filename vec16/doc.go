@@ -1,7 +1,7 @@
 package vec16
 
 /*
-Package vec16 provides functions for efficiently manipulating fixed-length arrays.
+Package vec16 provides functions for efficiently manipulating fixed-length arrays of size 16.
 
 It is one of several packages, each operating on a single size of array:
 
