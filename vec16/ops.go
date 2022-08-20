@@ -45,10 +45,11 @@ func Zero[T constraintsExt.Number](m mask.Bits, a [N]T) (r [N]T) {
 	return
 }
 
-func Broadcast[T constraintsExt.Number](m mask.Bits, a T) (r [N]T) {
-	m.ForTrue(N, func(i int) {
+// See README-DESIGN.md
+func Broadcast[T constraintsExt.Number](a T) (r [N]T) {
+	for i := 0; i < N; i++ {
 		r[i] = a
-	})
+	}
 	return
 }
 
