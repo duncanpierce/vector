@@ -55,7 +55,7 @@ func Broadcast[T constraintsExt.Number](a T) (r [N]T) {
 
 func Permute[T constraints.Integer, U constraintsExt.Number](m mask.Bits, a [N]T, b [N]U) (r [N]U) {
 	m.ForTrue(N, func(i int) {
-		r[a[i]] = b[i]
+		r[i] = b[a[i]]
 	})
 	return
 }
