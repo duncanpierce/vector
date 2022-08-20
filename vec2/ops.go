@@ -19,7 +19,7 @@ func Convert[S, T constraintsExt.Number](m mask.Bits, a [N]S) (r [N]T) {
 }
 
 /*
-Blend returns a vector with each element drawn from b if the corresponing mask bit in m is set or a if the bit is not set.
+Blend returns a vector with each element drawn from b if the corresponding mask bit in m is set or a if the bit is not set.
 Unlike most other vector functions, Blend does not set elements in the result to zero if the corresponding mask bit is not set.
 */
 func Blend[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
