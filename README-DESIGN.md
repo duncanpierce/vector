@@ -18,7 +18,7 @@
   * Propose adding `Number interface { constraints.Float | constraints.Integer }`
 * Utilise Go arrays to represent vectors
   * Allows direct access to array elements
-  * Opens up future vector size extensions by decoupling 
+  * Simplifies future vector size extensions by decoupling vector sizes from types declared in other vector packages
 * Simple naming that follows Go library/intrinsics names where possible (particularly the math and bits packages)
   * Except that we use opportunities that generics open up to reduce API call variants
 * Where there is no Go name, adopt the name used by AVX512
@@ -49,6 +49,9 @@ There are likely many opportunities to express Go fallback implementations in te
 vectors. Go compiler intrinsics could implement specific operations like `vec2.Add` in hardware,
 allowing unsupported operations like `vec4.Add` to gang 2 operations using shorter vectors.
 This would probably be the best way to structure fallback implementations of the different vector sizes.
+
+Because I am generating the different vector sizes packages, `vec2.Split` returns `[1]T` instead of `T`.
+I am debating whether `Split` and `Join` should exist at all.
 
 
 ## Disadvantages
