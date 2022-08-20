@@ -66,7 +66,6 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 * Horizontal instructions and naming convention
   * "Horizontal" "Across" "All" "Vector" "Lanes"
 * Loop tail and alignment operations
-* IsDuplicate() (VPCONFLICT)
 * Should there be a neighbour swap based on mask bits? (1 = swap, 0 = leave)
 * Swap(mask, a,b *[N]T) ? 
 
