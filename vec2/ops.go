@@ -35,7 +35,12 @@ func Zero[T constraintsExt.Number](m mask.Bits, a [N]T) (r [N]T) {
 	return
 }
 
-// README-DESIGN.md explains absence of mask parameter
+/*
+Broadcast returns a vector with a single value a copied into every element. This can be used to combine a vector with a scalar; for example: multiply every element of a vector by 10
+`b := vec2.Mul(mask.All(), a, vec2.Broadcast(10))`
+
+(Note: README-DESIGN.md explains absence of mask parameter)
+*/
 func Broadcast[T constraintsExt.Number](a T) (r [N]T) {
 	for i := range r {
 		r[i] = a
