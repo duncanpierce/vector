@@ -10,7 +10,8 @@
   * Adding new vector lengths
 * Focus on vector lengths that have been implemented in hardware - currently up to 512 bits (e.g. AVX512, Fugaku supercomputer implements Arm SVE at 512 bits)
 * Assume Go compiler can emulate longer vectors on vector hardware by ganging registers or looping
-* Assume Go compiler can fuse broadcast, memory and blend operations
+  * Aim for straightforward integration of hardware instructions with larger/wider operations that require fallback implementations in Go
+* Assume Go compiler can learn to fuse broadcast, memory and blend operations
   * No need to support the full range of addressing modes, blending, broadcast and architectural registers in the API
 * Utilise existing Go types
   * float16, bfloat16, etc. out of scope of this API
@@ -18,6 +19,7 @@
   * Propose adding `Number interface { constraints.Float | constraints.Integer }`
 * Utilise Go arrays to represent vectors
   * Allows direct access to array elements
+    * Avoids adding additional operations to insert/extract a scalar value from a vector
   * Simplifies future vector size extensions by decoupling vector sizes from types declared in other vector packages
 * Simple naming that follows Go library/intrinsics names where possible (particularly the math and bits packages)
   * Except that we use opportunities that generics open up to reduce API call variants
