@@ -1,6 +1,6 @@
 # Design decisions
 
-## Goals
+## Goals and assumptions
 
 * A simple API that does not expose the complexities of the underlying CPU architecture
 * Should not require understanding of the underlying CPU vector instructions or be aware of vector size limits
