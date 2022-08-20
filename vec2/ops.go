@@ -47,7 +47,7 @@ func Zero[T constraintsExt.Number](m mask.Bits, a [N]T) (r [N]T) {
 
 // See README-DESIGN.md
 func Broadcast[T constraintsExt.Number](a T) (r [N]T) {
-	for i := 0; i < N; i++ {
+	for i := range r {
 		r[i] = a
 	}
 	return
