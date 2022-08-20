@@ -70,7 +70,7 @@ I am debating whether `Split` and `Join` should exist at all.
 * Loop tail and alignment operations
 * IsDuplicate() (VPCONFLICT)
 * Should there be a neighbour swap based on mask bits? (1 = swap, 0 = leave)
-
+* Try vecN.Bool as a name
 
 ## Disadvantages
 

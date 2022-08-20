@@ -8,6 +8,9 @@ import (
 	"math/bits"
 )
 
+/*
+Convert returns a vector with all elements converted to the type T.
+*/
 func Convert[S, T constraintsExt.Number](m mask.Bits, a [N]S) (r [N]T) {
 	m.ForTrue(N, func(i int) {
 		r[i] = T(a[i])
@@ -15,6 +18,10 @@ func Convert[S, T constraintsExt.Number](m mask.Bits, a [N]S) (r [N]T) {
 	return
 }
 
+/*
+Blend returns a vector with each element drawn from b if the corresponing mask bit in m is set or a if the bit is not set.
+Unlike most other vector functions, Blend does not set elements in the result to zero if the corresponding mask bit is not set.
+*/
 func Blend[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
 	m.For(N, func(i int, c bool) {
 		if c {
@@ -26,6 +33,9 @@ func Blend[T constraintsExt.Number](m mask.Bits, a, b [N]T) (r [N]T) {
 	return
 }
 
+/*
+Zero returns a vector of elements drawn from a, except where the corresponding mask bit in m is not set, in which case, the element is set to zero.
+*/
 func Zero[T constraintsExt.Number](m mask.Bits, a [N]T) (r [N]T) {
 	m.For(N, func(i int, c bool) {
 		if !c {
