@@ -70,8 +70,7 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 * Should there be a neighbour swap based on mask bits? (1 = swap, 0 = leave)
 * Swap(mask, a,b *[N]T) ? 
 * VP2INTERSECT?
-* Improve documentation by substituting `T` with meaningful names
-* Improve documentation by substituting `N` with exact length
+* Improve documentation by substituting `Length` with exact length
 
 
 ## Disadvantages

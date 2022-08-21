@@ -1,3 +1,3 @@
 package vec16
 
-const N = 16
+const Length = 16
