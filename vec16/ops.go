@@ -8,11 +8,11 @@ import (
 )
 
 /*
-Convert returns a vector with all elements converted to the type T.
+Convert returns a vector with all elements converted to another type.
 */
-func Convert[ElementA, ElementB constraintsExt.Number](m Bool, a [Length]ElementA) (r [Length]ElementB) {
+func Convert[OldType, NewType constraintsExt.Number](m Bool, a [Length]OldType) (r [Length]NewType) {
 	m.ForTrue(func(i int) {
-		r[i] = ElementB(a[i])
+		r[i] = NewType(a[i])
 	})
 	return
 }
