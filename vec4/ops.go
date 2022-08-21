@@ -10,9 +10,9 @@ import (
 /*
 Convert returns a vector with all elements converted to the type T.
 */
-func Convert[S, T constraintsExt.Number](m Bool, a [N]S) (r [N]T) {
+func Convert[ElementA, ElementB constraintsExt.Number](m Bool, a [Length]ElementA) (r [Length]ElementB) {
 	m.ForTrue(func(i int) {
-		r[i] = T(a[i])
+		r[i] = ElementB(a[i])
 	})
 	return
 }
@@ -21,7 +21,7 @@ func Convert[S, T constraintsExt.Number](m Bool, a [N]S) (r [N]T) {
 Blend returns a vector with each element drawn from b if the corresponding mask bit in m is set or a if the bit is not set.
 Unlike most other vector functions, Blend does not set elements in the result to zero if the corresponding mask bit is not set.
 */
-func Blend[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+func Blend[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.For(func(i int, c bool) {
 		if c {
 			r[i] = b[i]
@@ -35,7 +35,7 @@ func Blend[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
 /*
 Zero returns a vector of elements drawn from a, except where the corresponding mask bit in m is not set, in which case, the element is set to zero.
 */
-func Zero[T constraintsExt.Number](m Bool, a [N]T) (r [N]T) {
+func Zero[Element constraintsExt.Number](m Bool, a [Length]Element) (r [Length]Element) {
 	m.For(func(i int, c bool) {
 		if !c {
 			r[i] = a[i]
@@ -50,7 +50,7 @@ Broadcast returns a vector with a single value a copied into every element. This
 
 (Note: README-DESIGN.md explains absence of mask parameter)
 */
-func Broadcast[T constraintsExt.Number](a T) (r [N]T) {
+func Broadcast[Element constraintsExt.Number](a Element) (r [Length]Element) {
 	for i := range r {
 		r[i] = a
 	}
@@ -60,7 +60,7 @@ func Broadcast[T constraintsExt.Number](a T) (r [N]T) {
 /*
 Permute returns a masked vector containing elements from b chosen from indices in a. An element from b may appear more than once in the result, or may be absent.
 */
-func Permute[T constraints.Integer, U constraintsExt.Number](m Bool, a [N]T, b [N]U) (r [N]U) {
+func Permute[Element constraints.Integer, U constraintsExt.Number](m Bool, a [Length]Element, b [Length]U) (r [Length]U) {
 	m.ForTrue(func(i int) {
 		r[i] = b[a[i]]
 	})
@@ -74,7 +74,7 @@ the first few elements of the result will contain elements a[0], b[0], a[1], b[1
 If n is 2 the first few elements of the result will contain a[0], a[1], b[0], b[1], a[2], a[3], b[2], b[3], etc.
 Panics if n is greater than vector length or is not a power of 2.
 */
-func Interlace[T constraintsExt.Number](n int, a, b [N / 2]T) (r [N]T) {
+func Interlace[Element constraintsExt.Number](n int, a, b [Length / 2]Element) (r [Length]Element) {
 	validInterlace(n)
 	for x, y, z := a[:], b[:], r[:]; len(z) > 0; x, y, z = x[n:], y[n:], z[n*2:] {
 		copy(z, x[:n])
@@ -88,7 +88,7 @@ Deinterlace splits a vector into 2 half-length vectors r and s, placing n consec
 This is repeated until all the elements of a are present in r and s.
 This is the reverse of Interlace.
 */
-func Deinterlace[T constraintsExt.Number](n int, a [N]T) (r, s [N / 2]T) {
+func Deinterlace[Element constraintsExt.Number](n int, a [Length]Element) (r, s [Length / 2]Element) {
 	validInterlace(n)
 	for x, y, z := a[:], r[:], s[:]; len(x) > 0; x, y, z = x[n*2:], y[n:], z[n:] {
 		copy(y, x[:n])
@@ -98,8 +98,8 @@ func Deinterlace[T constraintsExt.Number](n int, a [N]T) (r, s [N / 2]T) {
 }
 
 func validInterlace(n int) {
-	if n > N {
-		panic(fmt.Sprintf("n cannot be greater than vector length %v", N))
+	if n > Length {
+		panic(fmt.Sprintf("n cannot be greater than vector length %v", Length))
 	}
 	if bits.OnesCount(uint(n)) != 1 {
 		panic("n must be a power of 2")

@@ -6,49 +6,49 @@ import (
 	"math"
 )
 
-func Add[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+func Add[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		r[i] = a[i] + b[i]
 	})
 	return
 }
 
-func Sub[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+func Sub[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		r[i] = a[i] - b[i]
 	})
 	return
 }
 
-func Div[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+func Div[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		r[i] = a[i] / b[i]
 	})
 	return
 }
 
-func Mul[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+func Mul[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		r[i] = a[i] * b[i]
 	})
 	return
 }
 
-func FMA[T constraintsExt.Number](m Bool, a, b, c [N]T) (r [N]T) {
+func FMA[Element constraintsExt.Number](m Bool, a, b, c [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		r[i] = a[i]*b[i] + c[i]
 	})
 	return
 }
 
-func Neg[T constraintsExt.Number](m Bool, a [N]T) (r [N]T) {
+func Neg[Element constraintsExt.Number](m Bool, a [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		r[i] = -a[i]
 	})
 	return
 }
 
-func Abs[T constraintsExt.Number](m Bool, a [N]T) (r [N]T) {
+func Abs[Element constraintsExt.Number](m Bool, a [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		v := a[i]
 		if v < 0 {
@@ -59,7 +59,7 @@ func Abs[T constraintsExt.Number](m Bool, a [N]T) (r [N]T) {
 	return
 }
 
-func Max[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+func Max[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		v := a[i]
 		if b[i] > v {
@@ -70,7 +70,7 @@ func Max[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
 	return
 }
 
-func Min[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
+func Min[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		v := a[i]
 		if b[i] < v {
@@ -81,14 +81,14 @@ func Min[T constraintsExt.Number](m Bool, a, b [N]T) (r [N]T) {
 	return
 }
 
-func IsInf[T constraints.Float](m Bool, a [N]T, sign int) (r Bool) {
+func IsInf[Element constraints.Float](m Bool, a [Length]Element, sign int) (r Bool) {
 	m.ForTrue(func(i int) {
 		r.Set(i, math.IsInf(float64(a[i]), sign))
 	})
 	return
 }
 
-func IsNaN[T constraints.Float](m Bool, a [N]T) (r Bool) {
+func IsNaN[Element constraints.Float](m Bool, a [Length]Element) (r Bool) {
 	m.ForTrue(func(i int) {
 		r.Set(i, math.IsNaN(float64(a[i])))
 	})

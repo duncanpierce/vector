@@ -4,36 +4,36 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-func And[T constraints.Integer](m Bool, a, b [N]T) (r [N]T) {
+func And[Element constraints.Integer](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		r[i] = a[i] & b[i]
 	})
 	return
 }
 
-func AndNot[T constraints.Integer](m Bool, a, b [N]T) (r [N]T) {
+func AndNot[Element constraints.Integer](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		r[i] = a[i] &^ b[i]
 	})
 	return
 }
 
-func Or[T constraints.Integer](m Bool, a, b [N]T) (r [N]T) {
+func Or[Element constraints.Integer](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		r[i] = a[i] | b[i]
 	})
 	return
 }
 
-func Xor[T constraints.Integer](m Bool, a, b [N]T) (r [N]T) {
+func Xor[Element constraints.Integer](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		r[i] = a[i] ^ b[i]
 	})
 	return
 }
 
-func Not[T constraints.Integer](m Bool, a [N]T) (r [N]T) {
-	var all T
+func Not[Element constraints.Integer](m Bool, a [Length]Element) (r [Length]Element) {
+	var all Element
 	all--
 	m.ForTrue(func(i int) {
 		r[i] = a[i] ^ all
@@ -41,7 +41,7 @@ func Not[T constraints.Integer](m Bool, a [N]T) (r [N]T) {
 	return
 }
 
-func AndNotZero[T constraints.Integer](m Bool, a, b [N]T) (r Bool) {
+func AndNotZero[Element constraints.Integer](m Bool, a, b [Length]Element) (r Bool) {
 	m.ForTrue(func(i int) {
 		r.Set(i, a[i]&b[i] != 0)
 	})

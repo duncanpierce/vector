@@ -4,42 +4,42 @@ import (
 	"github.com/duncanpierce/vector/constraintsExt"
 )
 
-func Less[T constraintsExt.Number](m Bool, a, b [N]T) (r Bool) {
+func Less[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r Bool) {
 	m.ForTrue(func(i int) {
 		r.Set(i, a[i] < b[i])
 	})
 	return
 }
 
-func LessOrEqual[T constraintsExt.Number](m Bool, a, b [N]T) (r Bool) {
+func LessOrEqual[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r Bool) {
 	m.ForTrue(func(i int) {
 		r.Set(i, a[i] <= b[i])
 	})
 	return
 }
 
-func Greater[T constraintsExt.Number](m Bool, a, b [N]T) (r Bool) {
+func Greater[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r Bool) {
 	m.ForTrue(func(i int) {
 		r.Set(i, a[i] > b[i])
 	})
 	return
 }
 
-func GreaterOrEqual[T constraintsExt.Number](m Bool, a, b [N]T) (r Bool) {
+func GreaterOrEqual[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r Bool) {
 	m.ForTrue(func(i int) {
 		r.Set(i, a[i] >= b[i])
 	})
 	return
 }
 
-func Equal[T constraintsExt.Number](m Bool, a, b [N]T) (r Bool) {
+func Equal[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r Bool) {
 	m.ForTrue(func(i int) {
 		r.Set(i, a[i] == b[i])
 	})
 	return
 }
 
-func NotEqual[T constraintsExt.Number](m Bool, a, b [N]T) (r Bool) {
+func NotEqual[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r Bool) {
 	m.ForTrue(func(i int) {
 		r.Set(i, a[i] != b[i])
 	})

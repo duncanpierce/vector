@@ -5,7 +5,7 @@ type Bool struct {
 }
 
 const (
-	allBits = (1 << N) - 1
+	allBits = (1 << Length) - 1
 )
 
 func Full() (r Bool) {
@@ -13,11 +13,11 @@ func Full() (r Bool) {
 }
 
 func Last(n int) (r Bool) {
-	return Bool{(allBits << (N - n)) & allBits}
+	return Bool{(allBits << (Length - n)) & allBits}
 }
 
 func First(n int) (r Bool) {
-	return Bool{allBits >> (N - n)}
+	return Bool{allBits >> (Length - n)}
 }
 
 func (m Bool) True(i int) bool {
@@ -79,7 +79,7 @@ func (m Bool) ShiftRight(i int) (r Bool) {
 }
 
 func (m Bool) ForTrue(f func(i int)) {
-	for i := 0; i < N; i++ {
+	for i := 0; i < Length; i++ {
 		if m.True(i) {
 			f(i)
 		}
@@ -87,7 +87,7 @@ func (m Bool) ForTrue(f func(i int)) {
 }
 
 func (m Bool) For(f func(i int, c bool)) {
-	for i := 0; i < N; i++ {
+	for i := 0; i < Length; i++ {
 		f(i, m.True(i))
 	}
 }
