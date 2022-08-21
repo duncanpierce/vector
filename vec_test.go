@@ -92,3 +92,23 @@ func checkDeinterlace(t *testing.T, r, s [8]int) {
 		t.Errorf("failed on s")
 	}
 }
+
+func TestFirstN(t *testing.T) {
+	a := [16]int{}
+	b := [16]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
+	mask := vec16.First(3)
+	r := vec16.Blend(mask, a, b)
+	if !reflect.DeepEqual(r, [16]int{1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}) {
+		t.Errorf("unexpectedly got %v", r)
+	}
+}
+
+func TestLastN(t *testing.T) {
+	a := [16]int{}
+	b := [16]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
+	mask := vec16.Last(3)
+	r := vec16.Blend(mask, a, b)
+	if !reflect.DeepEqual(r, [16]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 15, 16}) {
+		t.Errorf("unexpectedly got %v", r)
+	}
+}

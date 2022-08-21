@@ -65,9 +65,11 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 * SwapLanes/SwapHorizontal
 * Horizontal instructions and naming convention
   * "Horizontal" "Across" "All" "Vector" "Lanes"
+  * e.g. SumAcross
 * Loop tail and alignment operations
 * Should there be a neighbour swap based on mask bits? (1 = swap, 0 = leave)
 * Swap(mask, a,b *[N]T) ? 
+* VP2INTERSECT?
 
 ## Disadvantages
 

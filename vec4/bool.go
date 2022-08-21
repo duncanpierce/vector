@@ -12,8 +12,12 @@ func Full() (r Bool) {
 	return Bool{allBits}
 }
 
-func Single() (r Bool) {
-	return Bool{1}
+func Last(n int) (r Bool) {
+	return Bool{(allBits << (N - n)) & allBits}
+}
+
+func First(n int) (r Bool) {
+	return Bool{allBits >> (N - n)}
 }
 
 func (m Bool) True(i int) bool {

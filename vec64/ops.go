@@ -8,7 +8,7 @@ import (
 )
 
 /*
-Convert returns a vector with allBits elements converted to the type T.
+Convert returns a vector with all elements converted to the type T.
 */
 func Convert[S, T constraintsExt.Number](m Bool, a [N]S) (r [N]T) {
 	m.ForTrue(func(i int) {
@@ -69,7 +69,7 @@ func Permute[T constraints.Integer, U constraintsExt.Number](m Bool, a [N]T, b [
 
 /*
 Interlace copies elements from two half-length vectors a and b into a single vector, taking n consecutive elements from a, then n consecutive elements from b.
-This is repeated until allBits elements of a and b have been included in the result. For example, if n is 1,
+This is repeated until all elements of a and b have been included in the result. For example, if n is 1,
 the first few elements of the result will contain elements a[0], b[0], a[1], b[1], a[2], b[2], etc.
 If n is 2 the first few elements of the result will contain a[0], a[1], b[0], b[1], a[2], a[3], b[2], b[3], etc.
 Panics if n is greater than vector length or is not a power of 2.
@@ -85,7 +85,7 @@ func Interlace[T constraintsExt.Number](n int, a, b [N / 2]T) (r [N]T) {
 
 /*
 Deinterlace splits a vector into 2 half-length vectors r and s, placing n consecutive elements in r, then n consecutive elements in s.
-This is repeated until allBits the elements of a are present in r and s.
+This is repeated until all the elements of a are present in r and s.
 This is the reverse of Interlace.
 */
 func Deinterlace[T constraintsExt.Number](n int, a [N]T) (r, s [N / 2]T) {
