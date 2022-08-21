@@ -1,5 +1,9 @@
 package vec2
 
+import (
+	"math/bits"
+)
+
 type Bool struct {
 	v uint64
 }
@@ -8,8 +12,12 @@ const (
 	allBits = (1 << Length) - 1
 )
 
-func Full() (r Bool) {
+func All() (r Bool) {
 	return Bool{allBits}
+}
+
+func None() (r Bool) {
+	return Bool{0}
 }
 
 func Last(n int) (r Bool) {
@@ -20,7 +28,7 @@ func First(n int) (r Bool) {
 	return Bool{allBits >> (Length - n)}
 }
 
-func (m Bool) True(i int) bool {
+func (m Bool) IsTrue(i int) bool {
 	if m.v&(1<<i) != 0 {
 		return true
 	}
@@ -33,6 +41,14 @@ func (m Bool) Set(i int, b bool) (r Bool) {
 		r.v |= 1 << i
 	}
 	return
+}
+
+func (m Bool) FirstTrue() (i int, ok bool) {
+	firstSet := bits.TrailingZeros64(m.v)
+	if firstSet < Length {
+		return firstSet, true
+	}
+	return 0, false
 }
 
 func (m Bool) And(n Bool) (r Bool) {
@@ -60,11 +76,11 @@ func (m Bool) Not() (r Bool) {
 	return
 }
 
-func (m Bool) Any() bool {
+func (m Bool) AnyTrue() bool {
 	return m.v != 0
 }
 
-func (m Bool) All() bool {
+func (m Bool) AllTrue() bool {
 	return m.v == allBits
 }
 
@@ -80,7 +96,7 @@ func (m Bool) ShiftRight(i int) (r Bool) {
 
 func (m Bool) ForTrue(f func(i int)) {
 	for i := 0; i < Length; i++ {
-		if m.True(i) {
+		if m.IsTrue(i) {
 			f(i)
 		}
 	}
@@ -88,6 +104,20 @@ func (m Bool) ForTrue(f func(i int)) {
 
 func (m Bool) For(f func(i int, c bool)) {
 	for i := 0; i < Length; i++ {
-		f(i, m.True(i))
+		f(i, m.IsTrue(i))
 	}
+}
+
+func ReduceAcross[Element any](m Bool, a [Length]Element, f func(x, y Element) Element) (result Element, ok bool) {
+	var firstTrue int
+	firstTrue, ok = m.FirstTrue()
+	if !ok {
+		return
+	}
+	result = a[firstTrue]
+	restTrue := m.Set(firstTrue, false)
+	restTrue.ForTrue(func(i int) {
+		result = f(result, a[i])
+	})
+	return
 }
