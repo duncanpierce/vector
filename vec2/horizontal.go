@@ -18,9 +18,9 @@ func IsDuplicate[Element constraintsExt.Number](m Bool, a [Length]Element) (r Bo
 }
 
 /*
-SumAcross adds each element selected by the Bool mask and returns their sum. If no elements are selected by the Bool mask, the result is 0.
+ElementSum adds each element selected by the Bool mask and returns their sum. If no elements are selected by the Bool mask, the result is 0.
 */
-func SumAcross[Element constraintsExt.Number](m Bool, a [Length]Element) (r Element) {
+func ElementSum[Element constraintsExt.Number](m Bool, a [Length]Element) (r Element) {
 	m.ForTrue(func(i int) {
 		r += a[i]
 	})
@@ -28,9 +28,9 @@ func SumAcross[Element constraintsExt.Number](m Bool, a [Length]Element) (r Elem
 }
 
 /*
-ProductAcross multiplies each element selected by the Bool mask and returns their product. If no elements are selected by the Bool mask, the result is 1.
+ElementProduct multiplies each element selected by the Bool mask and returns their product. If no elements are selected by the Bool mask, the result is 1.
 */
-func ProductAcross[Element constraintsExt.Number](m Bool, a [Length]Element) (r Element) {
+func ElementProduct[Element constraintsExt.Number](m Bool, a [Length]Element) (r Element) {
 	r = 1
 	m.ForTrue(func(i int) {
 		r *= a[i]
@@ -39,10 +39,10 @@ func ProductAcross[Element constraintsExt.Number](m Bool, a [Length]Element) (r 
 }
 
 /*
-MinAcross returns the minimum of the elements selected by the Bool mask. If no elements are selected by the Bool mask, the result ok is false.
+ElementMin returns the minimum of the elements selected by the Bool mask. If no elements are selected by the Bool mask, the result ok is false.
 */
-func MinAcross[Element constraintsExt.Number](m Bool, a [Length]Element) (min Element, ok bool) {
-	return ReduceAcross(m, a, func(x, y Element) Element {
+func ElementMin[Element constraintsExt.Number](m Bool, a [Length]Element) (min Element, ok bool) {
+	return ReduceElements(m, a, func(x, y Element) Element {
 		if x < y {
 			return x
 		}
@@ -51,10 +51,10 @@ func MinAcross[Element constraintsExt.Number](m Bool, a [Length]Element) (min El
 }
 
 /*
-MaxAcross returns the maximum of the elements selected by the Bool mask. If no elements are selected by the Bool mask, the result ok is false.
+ElementMax returns the maximum of the elements selected by the Bool mask. If no elements are selected by the Bool mask, the result ok is false.
 */
-func MaxAcross[Element constraintsExt.Number](m Bool, a [Length]Element) (min Element, ok bool) {
-	return ReduceAcross(m, a, func(x, y Element) Element {
+func ElementMax[Element constraintsExt.Number](m Bool, a [Length]Element) (min Element, ok bool) {
+	return ReduceElements(m, a, func(x, y Element) Element {
 		if x > y {
 			return x
 		}

@@ -108,7 +108,7 @@ func (m Bool) For(f func(i int, c bool)) {
 	}
 }
 
-func ReduceAcross[Element any](m Bool, a [Length]Element, f func(x, y Element) Element) (result Element, ok bool) {
+func ReduceElements[Element any](m Bool, a [Length]Element, f func(x, y Element) Element) (result Element, ok bool) {
 	var firstTrue int
 	firstTrue, ok = m.FirstTrue()
 	if !ok {

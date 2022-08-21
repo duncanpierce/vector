@@ -115,7 +115,7 @@ func TestLastN(t *testing.T) {
 
 func TestHorizontalMax(t *testing.T) {
 	a := [16]int{1, 2, 6, 10, 44, 3, 17, 19, 23, 33, 12, 2, 6, 43, 13, 16}
-	r, ok := vec16.MaxAcross(vec16.All(), a)
+	r, ok := vec16.ElementMax(vec16.All(), a)
 	if !ok {
 		t.Errorf("should be ok")
 	}
@@ -126,7 +126,7 @@ func TestHorizontalMax(t *testing.T) {
 
 func TestMaskedHorizontalMax(t *testing.T) {
 	a := [16]int{1, 2, 6, 10, 44, 3, 17, 19, 23, 33, 12, 2, 6, 43, 13, 16}
-	r, ok := vec16.MaxAcross(vec16.First(4), a)
+	r, ok := vec16.ElementMax(vec16.First(4), a)
 	if !ok {
 		t.Errorf("should be ok")
 	}
@@ -137,7 +137,7 @@ func TestMaskedHorizontalMax(t *testing.T) {
 
 func TestNoneMaskedHorizontalMax(t *testing.T) {
 	a := [16]int{1, 2, 6, 10, 44, 3, 17, 19, 23, 33, 12, 2, 6, 43, 13, 16}
-	_, ok := vec16.MaxAcross(vec16.None(), a)
+	_, ok := vec16.ElementMax(vec16.None(), a)
 	if ok {
 		t.Errorf("should not be ok")
 	}
