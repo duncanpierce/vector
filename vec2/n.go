@@ -1,3 +1,3 @@
 package vec2
 
-const N = 2
+const Length = 2

@@ -28,7 +28,7 @@ func TestMax(t *testing.T) {
 }
 
 func TestMask(t *testing.T) {
-	v := vec2.Add(vec2.Single(), [2]int{1, 2}, [2]int{3, 4})
+	v := vec2.Add(vec2.First(1), [2]int{1, 2}, [2]int{3, 4})
 	if v[0] != 4 {
 		t.Errorf("got %v", v[0])
 	}
@@ -36,7 +36,7 @@ func TestMask(t *testing.T) {
 		t.Errorf("got %v", v[1])
 	}
 
-	v = vec2.Add(vec2.Single().Not(), [2]int{1, 2}, [2]int{3, 4})
+	v = vec2.Add(vec2.First(1).Not(), [2]int{1, 2}, [2]int{3, 4})
 	if v[0] != 0 {
 		t.Errorf("got %v", v[0])
 	}

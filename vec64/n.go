@@ -1,3 +1,3 @@
 package vec64
 
-const N = 64
+const Length = 64
