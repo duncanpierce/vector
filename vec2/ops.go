@@ -60,7 +60,7 @@ func Broadcast[Element constraintsExt.Number](a Element) (r [Length]Element) {
 /*
 Permute returns a masked vector containing elements from b chosen from indices in a. An element from b may appear more than once in the result, or may be absent.
 */
-func Permute[Element constraints.Integer, U constraintsExt.Number](m Bool, a [Length]Element, b [Length]U) (r [Length]U) {
+func Permute[Index constraints.Integer, Element constraintsExt.Number](m Bool, a [Length]Index, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		r[i] = b[a[i]]
 	})
