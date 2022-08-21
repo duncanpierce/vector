@@ -112,3 +112,33 @@ func TestLastN(t *testing.T) {
 		t.Errorf("unexpectedly got %v", r)
 	}
 }
+
+func TestHorizontalMax(t *testing.T) {
+	a := [16]int{1, 2, 6, 10, 44, 3, 17, 19, 23, 33, 12, 2, 6, 43, 13, 16}
+	r, ok := vec16.MaxAcross(vec16.All(), a)
+	if !ok {
+		t.Errorf("should be ok")
+	}
+	if r != 44 {
+		t.Errorf("wrong value returned %v", r)
+	}
+}
+
+func TestMaskedHorizontalMax(t *testing.T) {
+	a := [16]int{1, 2, 6, 10, 44, 3, 17, 19, 23, 33, 12, 2, 6, 43, 13, 16}
+	r, ok := vec16.MaxAcross(vec16.First(4), a)
+	if !ok {
+		t.Errorf("should be ok")
+	}
+	if r != 10 {
+		t.Errorf("wrong value returned %v", r)
+	}
+}
+
+func TestNoneMaskedHorizontalMax(t *testing.T) {
+	a := [16]int{1, 2, 6, 10, 44, 3, 17, 19, 23, 33, 12, 2, 6, 43, 13, 16}
+	_, ok := vec16.MaxAcross(vec16.None(), a)
+	if ok {
+		t.Errorf("should not be ok")
+	}
+}
