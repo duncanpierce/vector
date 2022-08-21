@@ -70,6 +70,9 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 * Should there be a neighbour swap based on mask bits? (1 = swap, 0 = leave)
 * Swap(mask, a,b *[N]T) ? 
 * VP2INTERSECT?
+* Improve documentation by substituting `T` with meaningful names
+* Improve documentation by substituting `N` with exact length
+
 
 ## Disadvantages
 
@@ -84,15 +87,23 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 
 ## Specific decisions
 
-* There is 1 mask type
-  * Masks could instead be implemented at each vector size
-    * e.g. replacing (`mask.Bits` with `vec2.Mask`, `vec4.Mask`, etc.)
+* There was originally 1 mask type (opaque, with 64 bits)
+  * Masks are now reimplemented at the vector size and called `vecN.Bool`
     * Pro: removes the need for masks to be opaque in order to support future vector length extension
     * Con: duplicates all the mask operations across each vector size package
     * Con: may make it harder to implement in-vector conditional logic across differing vector sizes (need to resize mask vector)
     * Pro: we have `Any()` to detect set bits, if mask follows vector size, we can also have `All()`
-    * Pro: would no longer have to pass `N` to `Bits.ForEach()`
+    * Pro: would no longer have to pass `N` to `ForEach()`
 * `Broadcast` should not accept a mask parameter
   * The assumption is that tracking the value of a mask would make it harder for the compiler to fuse a broadcast with another operation
   * Using broadcast without a mask is simpler/shorter for the user
   * The fallback implementation of broadcast may lose some performance through unnecessarily copying the scalar value across the full array
+
+
+## Design variants
+
+* It is possible to reduce the width of type supported by longer vectors in sympathy with hardware
+  * Can be done by having narrower constraints on types within the package
+    * e.g. `type Number interface { Float32 | Integer32 }`
+    * This is still open to extension in future by relaxing the type constraints
+    * Disadvantage is not reusing the standard `constraints` package and duplicating constraints in each vector size package
