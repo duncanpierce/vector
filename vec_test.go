@@ -8,7 +8,7 @@ import (
 )
 
 func TestAdd(t *testing.T) {
-	v := vec2.Add(vec2.All(), [2]int{3, 4}, [2]int{5, 6})
+	v := vec2.Add(vec2.SelectAll(), [2]int{3, 4}, [2]int{5, 6})
 	if v[0] != 8 {
 		t.Errorf("got %v", v[0])
 	}
@@ -18,7 +18,7 @@ func TestAdd(t *testing.T) {
 }
 
 func TestMax(t *testing.T) {
-	v := vec2.Max(vec2.All(), [2]int{3, 4}, [2]int{2, 6})
+	v := vec2.Max(vec2.SelectAll(), [2]int{3, 4}, [2]int{2, 6})
 	if v[0] != 3 {
 		t.Errorf("got %v", v[0])
 	}
@@ -28,7 +28,7 @@ func TestMax(t *testing.T) {
 }
 
 func TestMask(t *testing.T) {
-	v := vec2.Add(vec2.First(1), [2]int{1, 2}, [2]int{3, 4})
+	v := vec2.Add(vec2.SelectFirst(1), [2]int{1, 2}, [2]int{3, 4})
 	if v[0] != 4 {
 		t.Errorf("got %v", v[0])
 	}
@@ -36,7 +36,7 @@ func TestMask(t *testing.T) {
 		t.Errorf("got %v", v[1])
 	}
 
-	v = vec2.Add(vec2.First(1).Not(), [2]int{1, 2}, [2]int{3, 4})
+	v = vec2.Add(vec2.SelectFirst(1).Not(), [2]int{1, 2}, [2]int{3, 4})
 	if v[0] != 0 {
 		t.Errorf("got %v", v[0])
 	}
@@ -96,7 +96,7 @@ func checkDeinterlace(t *testing.T, r, s [8]int) {
 func TestFirstN(t *testing.T) {
 	a := [16]int{}
 	b := [16]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
-	mask := vec16.First(3)
+	mask := vec16.SelectFirst(3)
 	r := vec16.Blend(mask, a, b)
 	if !reflect.DeepEqual(r, [16]int{1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}) {
 		t.Errorf("unexpectedly got %v", r)
@@ -106,7 +106,7 @@ func TestFirstN(t *testing.T) {
 func TestLastN(t *testing.T) {
 	a := [16]int{}
 	b := [16]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
-	mask := vec16.Last(3)
+	mask := vec16.SelectLast(3)
 	r := vec16.Blend(mask, a, b)
 	if !reflect.DeepEqual(r, [16]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 15, 16}) {
 		t.Errorf("unexpectedly got %v", r)
@@ -115,7 +115,7 @@ func TestLastN(t *testing.T) {
 
 func TestHorizontalMax(t *testing.T) {
 	a := [16]int{1, 2, 6, 10, 44, 3, 17, 19, 23, 33, 12, 2, 6, 43, 13, 16}
-	r, ok := vec16.ElementMax(vec16.All(), a)
+	r, ok := vec16.ElementMax(vec16.SelectAll(), a)
 	if !ok {
 		t.Errorf("should be ok")
 	}
@@ -126,7 +126,7 @@ func TestHorizontalMax(t *testing.T) {
 
 func TestMaskedHorizontalMax(t *testing.T) {
 	a := [16]int{1, 2, 6, 10, 44, 3, 17, 19, 23, 33, 12, 2, 6, 43, 13, 16}
-	r, ok := vec16.ElementMax(vec16.First(4), a)
+	r, ok := vec16.ElementMax(vec16.SelectFirst(4), a)
 	if !ok {
 		t.Errorf("should be ok")
 	}
@@ -137,7 +137,7 @@ func TestMaskedHorizontalMax(t *testing.T) {
 
 func TestNoneMaskedHorizontalMax(t *testing.T) {
 	a := [16]int{1, 2, 6, 10, 44, 3, 17, 19, 23, 33, 12, 2, 6, 43, 13, 16}
-	_, ok := vec16.ElementMax(vec16.None(), a)
+	_, ok := vec16.ElementMax(vec16.SelectNone(), a)
 	if ok {
 		t.Errorf("should not be ok")
 	}

@@ -12,19 +12,19 @@ const (
 	allBits = (1 << Length) - 1
 )
 
-func All() (r Bool) {
+func SelectAll() (r Bool) {
 	return Bool{allBits}
 }
 
-func None() (r Bool) {
+func SelectNone() (r Bool) {
 	return Bool{0}
 }
 
-func Last(n int) (r Bool) {
+func SelectLast(n int) (r Bool) {
 	return Bool{(allBits << (Length - n)) & allBits}
 }
 
-func First(n int) (r Bool) {
+func SelectFirst(n int) (r Bool) {
 	return Bool{allBits >> (Length - n)}
 }
 

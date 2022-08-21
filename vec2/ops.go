@@ -46,7 +46,7 @@ func Zero[Element constraintsExt.Number](m Bool, a [Length]Element) (r [Length]E
 
 /*
 Broadcast returns a vector with a single value a copied into every element. This can be used to combine a vector with a scalar; for example: multiply every element of a vector by 10
-`b := vec2.Mul(mask.All(), a, vec2.Broadcast(10))`
+`b := vec2.Mul(mask.SelectAll(), a, vec2.Broadcast(10))`
 
 (Note: README-DESIGN.md explains absence of mask parameter)
 */
