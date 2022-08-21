@@ -8,7 +8,7 @@ import (
 )
 
 func TestAdd(t *testing.T) {
-	v := vec2.Add(vec2.Full(), [2]int{3, 4}, [2]int{5, 6})
+	v := vec2.Add(vec2.All(), [2]int{3, 4}, [2]int{5, 6})
 	if v[0] != 8 {
 		t.Errorf("got %v", v[0])
 	}
@@ -18,7 +18,7 @@ func TestAdd(t *testing.T) {
 }
 
 func TestMax(t *testing.T) {
-	v := vec2.Max(vec2.Full(), [2]int{3, 4}, [2]int{2, 6})
+	v := vec2.Max(vec2.All(), [2]int{3, 4}, [2]int{2, 6})
 	if v[0] != 3 {
 		t.Errorf("got %v", v[0])
 	}
