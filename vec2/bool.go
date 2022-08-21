@@ -84,6 +84,10 @@ func (m Bool) AllTrue() bool {
 	return m.v == allBits
 }
 
+func (m Bool) CountTrue() int {
+	return bits.OnesCount64(m.v & allBits)
+}
+
 func (m Bool) ShiftLeft(i int) (r Bool) {
 	r.v = m.v << i
 	return

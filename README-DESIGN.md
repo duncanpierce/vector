@@ -69,9 +69,18 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 * Should there be a neighbour swap based on mask bits? (1 = swap, 0 = leave)
 * Swap(mask, a,b *[N]T) ? 
 * VP2INTERSECT?
-* Absolute difference? (SABD in SVE)
+* AppendAndPermute (2-source table based permute in AVX512)
+* Absolute difference? (SABD, UABD, FABD in SVE)
+* Saturating arithmetic
+* Dot product (SVE and AVX define partial integer dot product)
 * Improve documentation by substituting `Length` with exact length
-
+* Vector address generation
+  * How to implement safely? Could return N x ptr to slice element
+* Interlace and other ops may be over-constrained - no reason not to allow pointer elements
+  * May need better generic type constraints to allow number + pointer
+* Extended multiply and divide (i.e. 32b x 32b -> 64b)
+* Complex number operations?
+* Interlace/Deinterlace could be Zip/Unzip
 
 ## Disadvantages
 
