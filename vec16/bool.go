@@ -51,14 +51,6 @@ func (m Bool) FirstTrue() (i int, ok bool) {
 	return 0, false
 }
 
-func (m Bool) ExceptFirstTrue() (r Bool) {
-	firstSet := bits.TrailingZeros64(m.v)
-	if firstSet < Length {
-		r.v = m.v &^ (1 << firstSet)
-	}
-	return
-}
-
 func (m Bool) And(n Bool) (r Bool) {
 	r.v = m.v & n.v
 	return
@@ -117,13 +109,14 @@ func (m Bool) For(f func(i int, c bool)) {
 }
 
 func ReduceAcross[Element any](m Bool, a [Length]Element, f func(x, y Element) Element) (result Element, ok bool) {
-	var firstSet int
-	firstSet, ok = m.FirstTrue()
+	var firstTrue int
+	firstTrue, ok = m.FirstTrue()
 	if !ok {
 		return
 	}
-	result = a[firstSet]
-	m.ExceptFirstTrue().ForTrue(func(i int) {
+	result = a[firstTrue]
+	restTrue := m.Set(firstTrue, false)
+	restTrue.ForTrue(func(i int) {
 		result = f(result, a[i])
 	})
 	return
