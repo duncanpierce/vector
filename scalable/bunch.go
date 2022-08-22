@@ -26,7 +26,12 @@ type (
 
 func NewBunch[T any]() (b Bunch[T]) {
 	var el T
-	elementSize := bits.Len64(uint64(unsafe.Sizeof(el)))
+	size := uint64(unsafe.Sizeof(el))
+	elementSize := 1 << (64 - bits.LeadingZeros64(size) - 1)
+	if bits.OnesCount64(size) != 1 {
+		// Go to next size up if size isn't a power of 2
+		elementSize *= 2
+	}
 	vectorLength := runtimeExt.VectorLenBytes() / elementSize
 	switch vectorLength {
 	case 2:
