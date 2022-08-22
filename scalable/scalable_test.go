@@ -38,7 +38,7 @@ func TestBunchCanConsumeSlice(t *testing.T) {
 	b := NewBunch[byte]()
 	original := "hello world from scalable vector land"
 	v := []byte(original)
-	b.Load(&Slice[byte]{v})
+	b.Load(Slice(v))
 
 	if b.Active().Count() != len(original) {
 		t.Errorf("wrong count")
@@ -53,7 +53,7 @@ func TestBunchCanConsumeSlice(t *testing.T) {
 func TestBunchConsumesPartOfLargeSlice(t *testing.T) {
 	b := NewBunch[int64]()
 	original := []int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
-	b.Load(&Slice[int64]{original})
+	b.Load(Slice(original))
 
 	if b.Active().Count() != 8 {
 		t.Errorf("wrong count - got %v", b.Active().Count())
@@ -67,13 +67,12 @@ func TestBunchConsumesPartOfLargeSlice(t *testing.T) {
 
 //func TestMultiply(t *testing.T) {
 //	b := NewBunch[int64]()
-//	data := []int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
-//	b.ConsumeSlice(&data)
+//	b.Load(&Slice[int64]{[]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}})
 //
 //	r := NewBunch[int64]()
 //	r.Mul(b, Broadcast(10))
 //
-//	if !reflect.DeepEqual(r, []int64{1, 2, 3, 4, 5, 6, 7, 8}) {
+//	if !reflect.DeepEqual(r, []int64{10, 20, 30, 40, 50, 60, 70, 80}) {
 //		t.Errorf("wrong result - got %v", r)
 //	}
 //}
