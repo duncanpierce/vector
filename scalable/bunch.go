@@ -7,12 +7,10 @@ import (
 )
 
 type (
-	// Bunch holds mask of active elements
 	Bunch[Element any] interface {
-		ConsumeSlice(s *[]Element)
-		ConsumeChan(c <-chan Element)
-		ForRange(f func(value Element))
-		Predicate() Predicate
+		Load(source Reader[Element])
+		Store(dest Writer[Element])
+		Active() Predicate
 	}
 
 	array[Element any] interface {
@@ -20,8 +18,8 @@ type (
 	}
 
 	bunch[Element any, Array array[Element]] struct {
-		vec  Array
-		pred Predicate
+		vec    Array
+		active Predicate
 	}
 )
 
@@ -51,33 +49,23 @@ func NewBunch[T any]() (b Bunch[T]) {
 	return
 }
 
-func (b *bunch[Element, Array]) ForRange(f func(value Element)) {
-	b.pred.ForActive(func(index int) {
-		f(b.vec[index])
+func (b *bunch[Element, Array]) Store(f Writer[Element]) {
+	b.active.ForActive(func(index int) {
+		f.Write(b.vec[index])
 	})
 }
 
-func (b *bunch[Element, Array]) ConsumeSlice(s *[]Element) {
-	// can't do took := copy(b.vec[:], *s) AFAICT because we can't slice a generic of type `array` so we have to do it in long-form
-	take := min(len(b.vec), len(*s))
-	for i := 0; i < take; i++ {
-		b.vec[i] = (*s)[i]
-		b.pred = b.pred.Set(i, true)
-	}
-	*s = (*s)[take:]
-}
-
-func (b *bunch[Element, Array]) ConsumeChan(c <-chan Element) {
-	var ok bool
+func (b *bunch[Element, Array]) Load(source Reader[Element]) {
 	for i := 0; i < len(b.vec); i++ {
-		b.vec[i], ok = <-c
+		value, ok := source.Read()
 		if !ok {
-			break
+			return
 		}
-		b.pred = b.pred.Set(i, true)
+		b.vec[i] = value
+		b.active = b.active.Set(i, true)
 	}
 }
 
-func (b *bunch[Element, Array]) Predicate() Predicate {
-	return b.pred
+func (b *bunch[Element, Array]) Active() Predicate {
+	return b.active
 }

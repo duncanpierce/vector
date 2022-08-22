@@ -31,22 +31,20 @@ func TestNarrowItemVectorLengthSelection(t *testing.T) {
 
 func TestNewBunchIsEmpty(t *testing.T) {
 	b := NewBunch[int64]()
-	b.ForRange(func(v int64) {
-		t.Fail()
-	})
+	b.Store(FailWriter[int64]{t})
 }
 
 func TestBunchCanConsumeSlice(t *testing.T) {
 	b := NewBunch[byte]()
 	original := "hello world from scalable vector land"
 	v := []byte(original)
-	b.ConsumeSlice(&v)
+	b.Load(&Slice[byte]{v})
 
-	if b.Predicate().Count() != len(original) {
+	if b.Active().Count() != len(original) {
 		t.Errorf("wrong count")
 	}
 
-	r := ReturnSlice(b)
+	r := Extract(b)
 	if !reflect.DeepEqual(string(r), original) {
 		t.Errorf("wrong result - got %v", r)
 	}
@@ -55,16 +53,27 @@ func TestBunchCanConsumeSlice(t *testing.T) {
 func TestBunchConsumesPartOfLargeSlice(t *testing.T) {
 	b := NewBunch[int64]()
 	original := []int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
-	v := make([]int64, len(original))
-	copy(v, original)
-	b.ConsumeSlice(&v)
+	b.Load(&Slice[int64]{original})
 
-	if b.Predicate().Count() != 8 {
-		t.Errorf("wrong count - got %v", b.Predicate().Count())
+	if b.Active().Count() != 8 {
+		t.Errorf("wrong count - got %v", b.Active().Count())
 	}
 
-	r := ReturnSlice(b)
+	r := Extract(b)
 	if !reflect.DeepEqual(r, original[:8]) {
 		t.Errorf("wrong result - got %v", r)
 	}
 }
+
+//func TestMultiply(t *testing.T) {
+//	b := NewBunch[int64]()
+//	data := []int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
+//	b.ConsumeSlice(&data)
+//
+//	r := NewBunch[int64]()
+//	r.Mul(b, Broadcast(10))
+//
+//	if !reflect.DeepEqual(r, []int64{1, 2, 3, 4, 5, 6, 7, 8}) {
+//		t.Errorf("wrong result - got %v", r)
+//	}
+//}

@@ -96,7 +96,8 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
   * Could be used for Interlace provided we validate the mask has N/2 set bits
   * Could be used to Partition() into 2 slices - like Deinterlace but without
 * `fluent.New16[int]` actually returns Masked16 around a new vector so you can `.Blend(p).Add(a,b)`
-
+* **Investigate `Ranger[Element]` constraint** to match `<-chan Element` and `[]Element`
+  * If it works, have a single `Consume` method
 
 ## Disadvantages
 
