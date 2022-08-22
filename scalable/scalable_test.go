@@ -1,10 +1,13 @@
 package scalable
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestVectorLengthSelection(t *testing.T) {
 	b := NewBunch[int64]()
-	_, ok := b.(bunch[int64, [8]int64])
+	_, ok := b.(*bunch[int64, [8]int64])
 	if !ok {
 		t.Errorf("did not select expected vector length")
 	}
@@ -12,7 +15,7 @@ func TestVectorLengthSelection(t *testing.T) {
 
 func TestMisalignedVectorLengthSelection(t *testing.T) {
 	b := NewBunch[[3]byte]()
-	_, ok := b.(bunch[[3]byte, [16][3]byte])
+	_, ok := b.(*bunch[[3]byte, [16][3]byte])
 	if !ok {
 		t.Errorf("did not select expected vector length")
 	}
@@ -20,8 +23,29 @@ func TestMisalignedVectorLengthSelection(t *testing.T) {
 
 func TestNarrowItemVectorLengthSelection(t *testing.T) {
 	b := NewBunch[byte]()
-	_, ok := b.(bunch[byte, [64]byte])
+	_, ok := b.(*bunch[byte, [64]byte])
 	if !ok {
 		t.Errorf("did not select expected vector length")
+	}
+}
+
+func TestNewBunchIsEmpty(t *testing.T) {
+	b := NewBunch[int64]()
+	b.ForRange(func(v int64) {
+		t.Fail()
+	})
+}
+
+func TestBunchCanConsumeSlice(t *testing.T) {
+	b := NewBunch[byte]()
+	original := "hello world from scalable vector land"
+	v := []byte(original)
+	b.ConsumeSlice(&v)
+	if b.Predicate().Count() != len(original) {
+		t.Errorf("wrong count")
+	}
+	r := ReturnSlice(b)
+	if !reflect.DeepEqual(string(r), original) {
+		t.Errorf("wrong result - got %v", r)
 	}
 }

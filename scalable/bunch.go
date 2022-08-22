@@ -9,9 +9,10 @@ import (
 type (
 	// Bunch holds mask of active elements
 	Bunch[Element any] interface {
-		GrabSlice(s *[]Element)
-		GrabChan(c <-chan Element)
+		ConsumeSlice(s *[]Element)
+		ConsumeChan(c <-chan Element)
 		ForRange(f func(value Element))
+		Predicate() Predicate
 	}
 
 	array[Element any] interface {
@@ -35,38 +36,48 @@ func NewBunch[T any]() (b Bunch[T]) {
 	vectorLength := runtimeExt.VectorLenBytes() / elementSize
 	switch vectorLength {
 	case 2:
-		b = bunch[T, [2]T]{}
+		b = &bunch[T, [2]T]{}
 	case 4:
-		b = bunch[T, [4]T]{}
+		b = &bunch[T, [4]T]{}
 	case 8:
-		b = bunch[T, [8]T]{}
+		b = &bunch[T, [8]T]{}
 	case 16:
-		b = bunch[T, [16]T]{}
+		b = &bunch[T, [16]T]{}
 	case 32:
-		b = bunch[T, [32]T]{}
+		b = &bunch[T, [32]T]{}
 	default:
-		b = bunch[T, [64]T]{}
+		b = &bunch[T, [64]T]{}
 	}
 	return
 }
 
-func (b bunch[Element, Array]) ForRange(f func(value Element)) {
+func (b *bunch[Element, Array]) ForRange(f func(value Element)) {
 	b.pred.ForActive(func(index int) {
 		f(b.vec[index])
 	})
 }
 
-func (b bunch[Element, Array]) GrabSlice(s *[]Element) {
+func (b *bunch[Element, Array]) ConsumeSlice(s *[]Element) {
 	// can't do took := copy(b.vec[:], *s) AFAICT because we can't slice a generic of type `array` so we have to do it in long-form
 	take := min(len(b.vec), len(*s))
 	for i := 0; i < take; i++ {
 		b.vec[i] = (*s)[i]
+		b.pred = b.pred.Set(i, true)
 	}
 	*s = (*s)[take:]
 }
 
-func (b bunch[Element, Array]) GrabChan(c <-chan Element) {
+func (b *bunch[Element, Array]) ConsumeChan(c <-chan Element) {
+	var ok bool
 	for i := 0; i < len(b.vec); i++ {
-		b.vec[i] = <-c
+		b.vec[i], ok = <-c
+		if !ok {
+			break
+		}
+		b.pred = b.pred.Set(i, true)
 	}
+}
+
+func (b *bunch[Element, Array]) Predicate() Predicate {
+	return b.pred
 }

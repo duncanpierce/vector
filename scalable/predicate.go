@@ -1,5 +1,7 @@
 package scalable
 
+import "math/bits"
+
 type (
 	// Predicate records which elements of a vector are active and hold usable values.
 	// To support Arm SVE, this requires re-striding when changing vector element widths. See README-DESIGN.md.
@@ -14,4 +16,16 @@ func (p Predicate) ForActive(f func(index int)) {
 			f(i)
 		}
 	}
+}
+
+func (p Predicate) Set(i int, b bool) (result Predicate) {
+	result.mask = p.mask &^ (1 << i)
+	if b {
+		result.mask |= 1 << i
+	}
+	return
+}
+
+func (p Predicate) Count() int {
+	return bits.OnesCount64(p.mask)
 }
