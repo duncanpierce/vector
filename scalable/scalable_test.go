@@ -41,11 +41,30 @@ func TestBunchCanConsumeSlice(t *testing.T) {
 	original := "hello world from scalable vector land"
 	v := []byte(original)
 	b.ConsumeSlice(&v)
+
 	if b.Predicate().Count() != len(original) {
 		t.Errorf("wrong count")
 	}
+
 	r := ReturnSlice(b)
 	if !reflect.DeepEqual(string(r), original) {
+		t.Errorf("wrong result - got %v", r)
+	}
+}
+
+func TestBunchConsumesPartOfLargeSlice(t *testing.T) {
+	b := NewBunch[int64]()
+	original := []int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
+	v := make([]int64, len(original))
+	copy(v, original)
+	b.ConsumeSlice(&v)
+
+	if b.Predicate().Count() != 8 {
+		t.Errorf("wrong count - got %v", b.Predicate().Count())
+	}
+
+	r := ReturnSlice(b)
+	if !reflect.DeepEqual(r, original[:8]) {
 		t.Errorf("wrong result - got %v", r)
 	}
 }
