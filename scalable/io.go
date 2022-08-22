@@ -9,58 +9,63 @@ type (
 		Write(value Element)
 	}
 
-	ReaderWriter[Element any] interface {
-		Reader[Element]
-		Writer[Element]
+	sliceReader[Element any] struct {
+		slice *[]Element
 	}
 
-	sliceIo[Element any] struct {
-		Elements []Element
+	sliceWriter[Element any] struct {
+		slice *[]Element
 	}
 
-	chanIo[Element any] struct {
-		Elements chan Element
+	chanReader[Element any] struct {
+		channel <-chan Element
+	}
+
+	chanWriter[Element any] struct {
+		channel chan<- Element
 	}
 )
 
-var _ Reader[int] = &sliceIo[int]{}
-var _ Writer[int] = &sliceIo[int]{}
-var _ Reader[int] = &chanIo[int]{}
-var _ Writer[int] = &chanIo[int]{}
-
-func Slice[Element any](s []Element) ReaderWriter[Element] {
-	return &sliceIo[Element]{s}
+func FromSlice[Element any](s *[]Element) Reader[Element] {
+	return sliceReader[Element]{s}
 }
 
-func Chan[Element any](c chan Element) ReaderWriter[Element] {
-	return &chanIo[Element]{c}
+func ToSlice[Element any](s *[]Element) Writer[Element] {
+	return sliceWriter[Element]{s}
 }
 
-func (s *sliceIo[Element]) Write(value Element) {
-	s.Elements = append(s.Elements, value)
+func FromChan[Element any](c <-chan Element) Reader[Element] {
+	return chanReader[Element]{c}
 }
 
-func (s *sliceIo[Element]) Read() (value Element, ok bool) {
-	if len(s.Elements) < 1 {
+func ToChan[Element any](c chan<- Element) Writer[Element] {
+	return chanWriter[Element]{c}
+}
+
+func (s sliceReader[Element]) Read() (value Element, ok bool) {
+	if len(*s.slice) < 1 {
 		return
 	}
-	value = s.Elements[0]
+	value = (*s.slice)[0]
 	ok = true
-	s.Elements = s.Elements[1:]
+	*s.slice = (*s.slice)[1:]
 	return
 }
 
-func (c *chanIo[Element]) Write(value Element) {
-	c.Elements <- value
+func (s sliceWriter[Element]) Write(value Element) {
+	*s.slice = append(*s.slice, value)
 }
 
-func (c *chanIo[Element]) Read() (value Element, ok bool) {
-	value, ok = <-c.Elements
+func (c chanWriter[Element]) Write(value Element) {
+	c.channel <- value
+}
+
+func (c chanReader[Element]) Read() (value Element, ok bool) {
+	value, ok = <-c.channel
 	return
 }
 
 func Extract[Element any](b Bunch[Element]) (result []Element) {
-	dest := &sliceIo[Element]{}
-	b.Store(dest)
-	return dest.Elements
+	b.Store(ToSlice(&result))
+	return
 }
