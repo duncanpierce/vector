@@ -98,6 +98,14 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 * `fluent.New16[int]` actually returns Masked16 around a new vector so you can `.Blend(p).Add(a,b)`
 * **Investigate `Ranger[Element]` constraint** to match `<-chan Element` and `[]Element`
   * If it works, have a single `Consume` method
+* Panic/error if 2+ Bunch elements can't fit in vector size
+* How do we deal with Convert()? It will generally return a different vector length for a different type.
+  * Could return a slice of bunches?
+  * Could return a special Bunch that can hold more than 1 Bunch inside and hope multiple conversions don't blow up the vector size too much
+    * One optimisation would be when converting the special Bunch, aim to pack a full result vector even if it means converting multiple embedded input bunches
+    * Could represent as a bunch of bunches?
+    * If Element constrained to largest native (64 or 128 bits), worst case is converting from 64 int8 Bunch (el size=1) to 64 complex128 Bunch (el size=16)
+      * So it will fit inside a bunch[16]
 
 ## Disadvantages
 

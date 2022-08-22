@@ -11,6 +11,8 @@ type (
 		Load(source Reader[Element])
 		Store(dest Writer[Element])
 		Active() Predicate
+
+		Mul(x, y Bunch[Element]) Bunch[Element]
 	}
 
 	array[Element any] interface {
@@ -56,6 +58,7 @@ func (b *bunch[Element, Array]) Store(f Writer[Element]) {
 }
 
 func (b *bunch[Element, Array]) Load(source Reader[Element]) {
+	b.active = Predicate{}
 	for i := 0; i < len(b.vec); i++ {
 		value, ok := source.Read()
 		if !ok {

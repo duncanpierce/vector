@@ -77,14 +77,14 @@ func TestBunchConsumesPartOfLargeSlice(t *testing.T) {
 	}
 }
 
-//func TestMultiply(t *testing.T) {
-//	b := NewBunch[int64]()
-//	b.Load(&Slice[int64]{[]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}})
-//
-//	r := NewBunch[int64]()
-//	r.Mul(b, Broadcast(10))
-//
-//	if !reflect.DeepEqual(r, []int64{10, 20, 30, 40, 50, 60, 70, 80}) {
-//		t.Errorf("wrong result - got %v", r)
-//	}
-//}
+func TestMultiply(t *testing.T) {
+	b := NewBunch[int64]()
+	b.Load(Slice([]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}))
+
+	r := NewBunch[int64]()
+	r.Mul(b, b)
+
+	if !reflect.DeepEqual(r, []int64{1, 4, 9, 16, 25, 36, 47, 64}) {
+		t.Errorf("wrong result - got %v", r)
+	}
+}
