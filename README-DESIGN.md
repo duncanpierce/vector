@@ -182,3 +182,7 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
             * might work in a Fluent-style API
             * might be awkward to mask a vector using another vector, rather than a mask
             * might need to panic when combining vectors with different masks? (or you'd potentially be subtly losing data)
+  * Potentially get partway to auto-vectorization with this approach
+    * Assuming you can range over a vector and lift Go's scalar operations to vector equivalents
+    * Also require loop head and tail in many cases, e.g. memory alignment in head + tail, final reduction in tail
+    * Alignment may not be achievable when combining 2 or more slices and it's not clear SVE requires it
