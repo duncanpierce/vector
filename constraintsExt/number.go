@@ -3,7 +3,7 @@ package constraintsExt
 import "golang.org/x/exp/constraints"
 
 type (
-	// Ideally, this would be added to constraints package
+	// Number is a type constraint matching constraints.Float and constraints.Integer. Candidate for adding to constraints package.
 	Number interface {
 		constraints.Float | constraints.Integer
 	}
