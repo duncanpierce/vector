@@ -61,7 +61,6 @@ func (b bunch[Element, Array]) GrabSlice(s *[]Element) {
 }
 
 func (b bunch[Element, Array]) GrabChan(c <-chan Element) {
-	// can't do took := copy(b.vec[:], *s) AFAICT because we can't slice a generic of type `array`
 	for i := 0; i < len(b.vec); i++ {
 		b.vec[i] = <-c
 	}
