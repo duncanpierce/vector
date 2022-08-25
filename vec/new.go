@@ -6,8 +6,15 @@ import (
 	"unsafe"
 )
 
+// New returns a vector of the best length for the element type. The length is chosen to make best use of the CPU's vector instructions.
 func New[E any]() (b Vector[E]) {
-	switch VectorLen[E]() {
+	return NewSized[E, E]()
+}
+
+// NewSized returns a vector sized to match the length of another vector with elements of type SizeFor.
+// NewSized should be used when you require vectors with the same number of elements but different types.
+func NewSized[E any, SizeFor any]() (b Vector[E]) {
+	switch VectorLen[SizeFor]() {
 	case 1:
 		b = &ScalableVector[E, [1]E]{}
 	case 2:
