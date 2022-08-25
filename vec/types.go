@@ -2,26 +2,16 @@ package vec
 
 import (
 	"github.com/duncanpierce/vector/constraintsExt"
+	"unsafe"
 )
 
 type (
-	//ScalableVectorType[E constraintsExt.Number] interface {
-	//	constraints.FixedVector[E]
-	//}
-
-	Vector1[E constraintsExt.Number]  [1]E
-	Vector2[E constraintsExt.Number]  [2]E
-	Vector4[E constraintsExt.Number]  [4]E
-	Vector8[E constraintsExt.Number]  [8]E
-	Vector16[E constraintsExt.Number] [16]E
-	Vector32[E constraintsExt.Number] [32]E
-	Vector64[E constraintsExt.Number] [64]E
-
 	ScalableVector[E any, V constraintsExt.Vector[E]] struct {
 		v V
 	}
 
-	Vector[E constraintsExt.Number] interface {
+	Vector[E any] interface {
+		Slice() []E
 	}
 
 	Lanes[E any] struct {
@@ -36,3 +26,8 @@ type (
 		mask uint64
 	}
 )
+
+func (s *ScalableVector[E, V]) Slice() []E {
+	// TODO unclear why I can't return (*s).v[:]
+	return unsafe.Slice((*E)(unsafe.Pointer(&(*s).v)), len((*s).v))
+}
