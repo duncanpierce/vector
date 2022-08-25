@@ -64,7 +64,8 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 
 ## To do
 
-* SwapLanes/SwapHorizontal
+* Vector.Slice() to return a slice of an otherwise-opaque vector's elements
+* Mix
 * Horizontal instructions and naming convention
   * "Horizontal" "Across" "All" "Vector" "Lanes" "Element(s)"
 * Loop tail and alignment operations
@@ -106,6 +107,9 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
     * Could represent as a bunch of bunches?
     * If Element constrained to largest native (64 or 128 bits), worst case is converting from 64 int8 Bunch (el size=1) to 64 complex128 Bunch (el size=16)
       * So it will fit inside a bunch[16]
+* Parallel LoadCorresponding
+  * Loads each Bunch in parallel, stopping when the shortest one is full or the first Reader is empty
+* `Truncate` a vector to get a smaller size (ie. split and discard)
 
 ## Disadvantages
 
@@ -195,3 +199,30 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
     * Assuming you can range over a vector and lift Go's scalar operations to vector equivalents
     * Also require loop head and tail in many cases, e.g. memory alignment in head + tail, final reduction in tail
     * Alignment may not be achievable when combining 2 or more slices and it's not clear SVE requires it
+* Allow non-power-of-2 vector sizes and have `binaryOp`, `split` et al inspect array length in binary to determine how to split up vector into smaller ops
+  * 15 should be sized up to 16
+    * On CPU which can blend and doesn't read/write/fault a masked-off memory access, we could still store 15 elements but safely operate on 16
+    * If we can't use raw Go arrays, makes more sense to have a Vec15 type which is [16]E internally
+  * 9 should be sized down to 8 plus a scalar op
+  * Probably best assume a given width should be half full or more
+
+## Go language suggestions
+
+* Improve type inference so type parameters of e.g. `Add[E Number, V[E] Vector](z, x, y *V)` can be inferred
+  * **Edit** I've just realised you only need to provide enough type params to allow the rest to be worked out!
+    * So it only requires `Add[float64](z, x, y)`, rather than `Add[float64,[8]float64](z, x, y)` as I originally thought 
+      * Big improvement to readability
+* Add ability to switch on type parameter, e.g. `switch V.(type) { case [2]E:`...
+  * This should allow several same-type parameters (e.g. `(z, x, y *V)`) to be interpreted as a concrete type after the `case`
+  * In some instances this could avoid a lot of type assertions
+  * Compiler can check cases are possible, which can't be done with `switch any(v).(type)`
+* In some cases it would help to be able to embed a type param in a constraint:
+  * `type Broadcast[E any, V Vector[E]] V` <- `V` can only be struct field
+    * This stops us taking `len` of values that include broadcast, even though they are all arrays
+  * Similarly `type VectorScalar[E any] interface { Vector[E] | E }` <- `E` must be wrapped in a struct
+* Puzzle:
+  * Given `Broadcast[E any, V Vector[E]] struct { Replicated V }`
+  * And `VectorBroadcast[E any, V Vector[E]] interface { Vector[E] | Broadcast[E, V] }`
+  * Where I have a value of type `*Broadcast[E, V]` type-asserted from a `VectorBroadcast[E, V]`
+  * I'm not sure why I can find the `len` of `Broadcast.Replicated` but I can't slice it
+    * Go knows it has type `V` but it doesn't seem to know that is also `Vector[E]` and therefore sliceable
