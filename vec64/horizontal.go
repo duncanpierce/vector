@@ -1,6 +1,9 @@
 package vec64
 
-import "github.com/duncanpierce/vector/constraintsExt"
+import (
+	"github.com/duncanpierce/vector/constraintsExt"
+	"golang.org/x/exp/constraints"
+)
 
 /*
 IsDuplicate checks elements of vector a for values which are equal to one another. If several elements have the same value,
@@ -41,7 +44,7 @@ func ElementProduct[Element constraintsExt.Number](m Bool, a [Length]Element) (r
 /*
 ElementMin returns the minimum of the elements selected by the Bool mask. If no elements are selected by the Bool mask, the result ok is false.
 */
-func ElementMin[Element constraintsExt.Number](m Bool, a [Length]Element) (min Element, ok bool) {
+func ElementMin[Element constraints.Ordered](m Bool, a [Length]Element) (min Element, ok bool) {
 	return ReduceElements(m, a, func(x, y Element) Element {
 		if x < y {
 			return x
@@ -53,7 +56,7 @@ func ElementMin[Element constraintsExt.Number](m Bool, a [Length]Element) (min E
 /*
 ElementMax returns the maximum of the elements selected by the Bool mask. If no elements are selected by the Bool mask, the result ok is false.
 */
-func ElementMax[Element constraintsExt.Number](m Bool, a [Length]Element) (min Element, ok bool) {
+func ElementMax[Element constraints.Ordered](m Bool, a [Length]Element) (min Element, ok bool) {
 	return ReduceElements(m, a, func(x, y Element) Element {
 		if x > y {
 			return x

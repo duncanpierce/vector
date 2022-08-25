@@ -48,7 +48,7 @@ func Neg[Element constraintsExt.Number](m Bool, a [Length]Element) (r [Length]El
 	return
 }
 
-func Abs[Element constraintsExt.Number](m Bool, a [Length]Element) (r [Length]Element) {
+func Abs[Element constraintsExt.OrderedNumber](m Bool, a [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		v := a[i]
 		if v < 0 {
@@ -59,7 +59,7 @@ func Abs[Element constraintsExt.Number](m Bool, a [Length]Element) (r [Length]El
 	return
 }
 
-func Max[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r [Length]Element) {
+func Max[Element constraintsExt.OrderedNumber](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		v := a[i]
 		if b[i] > v {
@@ -70,7 +70,7 @@ func Max[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r [Length
 	return
 }
 
-func Min[Element constraintsExt.Number](m Bool, a, b [Length]Element) (r [Length]Element) {
+func Min[Element constraintsExt.OrderedNumber](m Bool, a, b [Length]Element) (r [Length]Element) {
 	m.ForTrue(func(i int) {
 		v := a[i]
 		if b[i] < v {

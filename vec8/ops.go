@@ -8,9 +8,9 @@ import (
 )
 
 /*
-Convert returns a vector with all elements converted to another type.
+Convert returns a vector with all elements converted to another numeric type.
 */
-func Convert[OldType, NewType constraintsExt.Number](m Bool, a [Length]OldType) (r [Length]NewType) {
+func Convert[OldType, NewType constraintsExt.OrderedNumber](m Bool, a [Length]OldType) (r [Length]NewType) {
 	m.ForTrue(func(i int) {
 		r[i] = NewType(a[i])
 	})

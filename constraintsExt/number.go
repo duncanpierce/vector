@@ -7,4 +7,9 @@ type (
 	Number interface {
 		constraints.Float | constraints.Integer | constraints.Complex
 	}
+
+	// OrderedNumber is a type constraint matching all ordered numbers, including bytes and runes but not complex numbers, which are not ordered. Candidate for inclusion in constraints package.
+	OrderedNumber interface {
+		constraints.Float | constraints.Integer
+	}
 )
