@@ -89,3 +89,13 @@ func TestReplicate(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestReplicateScalar(t *testing.T) {
+	small := constraintsExt.Scalar[int]{99}
+	big := [8]int{}
+	Replicate[int, [1]int](&big, &small)
+
+	if !reflect.DeepEqual(big, [8]int{99, 99, 99, 99, 99, 99, 99, 99}) {
+		t.Fail()
+	}
+}
