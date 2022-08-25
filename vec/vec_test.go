@@ -91,9 +91,8 @@ func TestBroadcast(t *testing.T) {
 }
 
 func TestBroadcastScalar(t *testing.T) {
-	small := constraintsExt.Scalar[int]{99}
 	big := [8]int{}
-	Broadcast[int, [1]int](&big, &small)
+	Broadcast[int, [1]int](&big, Scalar(99))
 
 	if !reflect.DeepEqual(big, [8]int{99, 99, 99, 99, 99, 99, 99, 99}) {
 		t.Fail()
