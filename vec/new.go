@@ -35,6 +35,7 @@ func NewSized[E any, SizeFor any]() (b Vector[E]) {
 	return
 }
 
+// VectorLen returns the vector length that New will use to create a vector of elements of type E.
 func VectorLen[E any]() int {
 	var el E
 	size := uint64(unsafe.Sizeof(el))
