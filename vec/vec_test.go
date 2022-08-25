@@ -103,7 +103,11 @@ func TestBroadcastTooBigPanics(t *testing.T) {
 	small := [2]int{2, 3}
 	big := [8]int{}
 
-	defer shouldPanic(t)
+	defer func() {
+		if r := recover(); r == nil {
+			t.Fail()
+		}
+	}()
 	Broadcast[int, [2]int](&small, &big)
 }
 
@@ -117,8 +121,12 @@ func TestBroadcastSameSize(t *testing.T) {
 	}
 }
 
-func shouldPanic(t *testing.T) {
-	if r := recover(); r == nil {
+func TestConvert(t *testing.T) {
+	from := [4]int{1, 2, 3, 4}
+	to := [4]float32{}
+	Convert[int, float32](&to, &from)
+
+	if !reflect.DeepEqual(to, [4]float32{1, 2, 3, 4}) {
 		t.Fail()
 	}
 }
