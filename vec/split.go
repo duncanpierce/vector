@@ -42,7 +42,7 @@ func binaryOp[E constraintsExt.Number, Big, Little constraintsExt.Vector[E]](z, 
 	f(z1, x1, y1)
 }
 
-func combineNumbers2[E any, V constraintsExt.Vector[E], VB constraintsExt.VectorBroadcast[E]](z *V, x, y *VB, combine ...[]func(c, a, b *any)) {
-
+func combineNumbers2[E any, V constraintsExt.Vector[E], VB constraintsExt.VectorBroadcast[E]](z *V, x, y *VB, op ...[]func(c, a, b *any)) {
+	//xSlice, xBroadcast := unsafeSliceBroadcast[E,V](x)
 	fmt.Printf("vector len %v", len(*z))
 }

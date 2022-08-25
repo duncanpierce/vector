@@ -226,3 +226,5 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
   * Where I have a value of type `*Broadcast[E, V]` type-asserted from a `VectorBroadcast[E, V]`
   * I'm not sure why I can find the `len` of `Broadcast.Replicated` but I can't slice it
     * Go knows it has type `V` but it doesn't seem to know that is also `Vector[E]` and therefore sliceable
+* It would be nice to assist  `func (t *testing.T) MustPanic() { if r := recover(); r == nil { t.Fail() } }`
+  * So tests can check panic easily with `defer t.MustPanic(); /* code that panics */`

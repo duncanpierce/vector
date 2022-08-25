@@ -80,22 +80,46 @@ func TestSliceVector(t *testing.T) {
 	}
 }
 
-func TestReplicate(t *testing.T) {
+func TestBroadcast(t *testing.T) {
 	small := [2]int{2, 3}
 	big := [8]int{}
-	Replicate[int, [2]int](&big, &small)
+	Broadcast[int, [2]int](&big, &small)
 
 	if !reflect.DeepEqual(big, [8]int{2, 3, 2, 3, 2, 3, 2, 3}) {
 		t.Fail()
 	}
 }
 
-func TestReplicateScalar(t *testing.T) {
+func TestBroadcastScalar(t *testing.T) {
 	small := constraintsExt.Scalar[int]{99}
 	big := [8]int{}
-	Replicate[int, [1]int](&big, &small)
+	Broadcast[int, [1]int](&big, &small)
 
 	if !reflect.DeepEqual(big, [8]int{99, 99, 99, 99, 99, 99, 99, 99}) {
+		t.Fail()
+	}
+}
+
+func TestBroadcastTooBigPanics(t *testing.T) {
+	small := [2]int{2, 3}
+	big := [8]int{}
+
+	defer shouldPanic(t)
+	Broadcast[int, [2]int](&small, &big)
+}
+
+func TestBroadcastSameSize(t *testing.T) {
+	small := [2]int{2, 3}
+	alsoSmall := [2]int{}
+
+	Broadcast[int, [2]int](&alsoSmall, &small)
+	if !reflect.DeepEqual(alsoSmall, [2]int{2, 3}) {
+		t.Fail()
+	}
+}
+
+func shouldPanic(t *testing.T) {
+	if r := recover(); r == nil {
 		t.Fail()
 	}
 }
