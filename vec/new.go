@@ -16,19 +16,19 @@ func New[E any]() (b Vector[E]) {
 func NewSized[E any, SizeFor any]() (b Vector[E]) {
 	switch VectorLen[SizeFor]() {
 	case 1:
-		b = &ScalableVector[E, [1]E]{}
+		b = &Vec1[E]{}
 	case 2:
-		b = &ScalableVector[E, [2]E]{}
+		b = &Vec2[E]{}
 	case 4:
-		b = &ScalableVector[E, [4]E]{}
+		b = &Vec4[E]{}
 	case 8:
-		b = &ScalableVector[E, [8]E]{}
+		b = &Vec8[E]{}
 	case 16:
-		b = &ScalableVector[E, [16]E]{}
+		b = &Vec16[E]{}
 	case 32:
-		b = &ScalableVector[E, [32]E]{}
+		b = &Vec32[E]{}
 	case 64:
-		b = &ScalableVector[E, [64]E]{}
+		b = &Vec64[E]{}
 	default:
 		panic("no suitable vector size found")
 	}
