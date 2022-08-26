@@ -206,7 +206,7 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
   * 9 should be sized down to 8 plus a scalar op
   * Probably best assume a given width should be half full or more
 
-## Go language suggestions
+## Go language hurdles and suggestions
 
 * Improve type inference so type parameters of e.g. `Add[E Number, V[E] Vector](z, x, y *V)` can be inferred
   * **Edit** I've just realised you only need to provide enough type params to allow the rest to be worked out!
@@ -228,3 +228,14 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
     * Go knows it has type `V` but it doesn't seem to know that is also `Vector[E]` and therefore sliceable
 * It would be nice to assist  `func (t *testing.T) MustPanic() { if r := recover(); r == nil { t.Fail() } }`
   * So tests can check panic easily with `defer t.MustPanic(); /* code that panics */`
+
+```go
+func unsafeSlice[E any, V constraintsExt.Vector[E]](v *V) (slice []E) {
+	// TODO not sure why I can't return (*v)[:]
+	// A value of type V can be trivially converted to a value of type [n]E.
+	// Unfortunately we can't explicitly convert to that type with a type constructor because we don't know n.
+	// It would be nice if array sizes could be generic parameters, e.g. `type Vector[E any, N const] interface { ~[N]E }`.
+	// However, in this case we would be giving up "blessed" power-of-two vector lengths unless Go also allowed the const
+	// to be constrained. So it is not a trivial extension to the language conceptually.
+	return unsafe.Slice((*E)(unsafe.Pointer(v)), len(*v))
+```

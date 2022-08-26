@@ -6,7 +6,7 @@ import (
 )
 
 func unsafeSlice[E any, V constraintsExt.Vector[E]](v *V) (slice []E) {
-	// TODO not sure why I can't return (*v)[:]
+	// TODO not sure why I can't return (*v)[:] - see README-DESIGN.md
 	return unsafe.Slice((*E)(unsafe.Pointer(v)), len(*v))
 }
 

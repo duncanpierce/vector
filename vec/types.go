@@ -28,6 +28,6 @@ type (
 )
 
 func (s *ScalableVector[E, V]) Slice() []E {
-	// TODO unclear why I can't return (*s).v[:]
+	// TODO unclear why I can't return (*s).v[:] - see README-DESIGN.md
 	return unsafe.Slice((*E)(unsafe.Pointer(&(*s).v)), len((*s).v))
 }
