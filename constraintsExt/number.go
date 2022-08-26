@@ -12,4 +12,9 @@ type (
 	OrderedNumber interface {
 		constraints.Float | constraints.Integer
 	}
+
+	// ConvertableNumber is a type constraint matching all numbers which can be converted to another ConvertableNumber. This includes bytes and runes but not complex numbers. Candidate for inclusion in constraints package.
+	ConvertableNumber interface {
+		constraints.Float | constraints.Integer
+	}
 )
