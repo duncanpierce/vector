@@ -125,7 +125,7 @@ func TestReplicateSameSize(t *testing.T) {
 func TestConvert(t *testing.T) {
 	from := [4]int{1, 2, 3, 4}
 	to := [4]float32{}
-	Convert[int, float32](&to, &from)
+	Convert[float32, int](&to, &from)
 
 	if !reflect.DeepEqual(to, [4]float32{1, 2, 3, 4}) {
 		t.Fail()
