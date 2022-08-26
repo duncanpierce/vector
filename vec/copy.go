@@ -29,14 +29,8 @@ func Len[E any, V constraintsExt.Vector[E], VB constraintsExt.VectorBroadcast[E]
 	return len(slice), b
 }
 
-func Broadcast[E any, Small, Big constraintsExt.Vector[E], VB constraintsExt.VectorBroadcast[E]](v *Big, vb *VB) {
-	vbSlice, _ := unsafeSliceBroadcast[E, Small](vb)
-	vSlice := unsafeSlice[E](v)
-	if len(vbSlice) > len(vSlice) {
-		panic("vector being broadcast cannot have more elements than the one it is being broadcast to")
-	}
-	for len(vSlice) > 0 {
-		copy(vSlice, vbSlice)
-		vSlice = vSlice[len(vbSlice):]
-	}
+func Copy[E any, X constraintsExt.Vector[E]](z *X, x *X) {
+	xSlice := unsafeSlice[E](x)
+	zSlice := unsafeSlice[E](z)
+	copy(zSlice, xSlice)
 }

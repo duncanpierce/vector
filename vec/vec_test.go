@@ -80,26 +80,27 @@ func TestSliceVector(t *testing.T) {
 	}
 }
 
-func TestBroadcast(t *testing.T) {
+func TestReplicate(t *testing.T) {
 	small := [2]int{2, 3}
 	big := [8]int{}
-	Broadcast[int, [2]int](&big, &small)
+	Replicate[int](&big, &small)
 
 	if !reflect.DeepEqual(big, [8]int{2, 3, 2, 3, 2, 3, 2, 3}) {
 		t.Fail()
 	}
 }
 
-func TestBroadcastScalar(t *testing.T) {
+func TestReplicateScalar(t *testing.T) {
 	big := [8]int{}
-	Broadcast[int, [1]int](&big, Scalar(99))
+	small := [1]int{99}
+	Replicate[int](&big, &small)
 
 	if !reflect.DeepEqual(big, [8]int{99, 99, 99, 99, 99, 99, 99, 99}) {
 		t.Fail()
 	}
 }
 
-func TestBroadcastTooBigPanics(t *testing.T) {
+func TestReplicatePanicsIfBigger(t *testing.T) {
 	small := [2]int{2, 3}
 	big := [8]int{}
 
@@ -108,14 +109,14 @@ func TestBroadcastTooBigPanics(t *testing.T) {
 			t.Fail()
 		}
 	}()
-	Broadcast[int, [2]int](&small, &big)
+	Replicate[int](&small, &big)
 }
 
-func TestBroadcastSameSize(t *testing.T) {
+func TestReplicateSameSize(t *testing.T) {
 	small := [2]int{2, 3}
 	alsoSmall := [2]int{}
 
-	Broadcast[int, [2]int](&alsoSmall, &small)
+	Replicate[int](&alsoSmall, &small)
 	if !reflect.DeepEqual(alsoSmall, [2]int{2, 3}) {
 		t.Fail()
 	}
@@ -127,6 +128,25 @@ func TestConvert(t *testing.T) {
 	Convert[int, float32](&to, &from)
 
 	if !reflect.DeepEqual(to, [4]float32{1, 2, 3, 4}) {
+		t.Fail()
+	}
+}
+
+func TestCopy(t *testing.T) {
+	from := [4]int{1, 2, 3, 4}
+	to := [4]int{}
+	Copy[int](&to, &from)
+
+	if !reflect.DeepEqual(to, [4]int{1, 2, 3, 4}) {
+		t.Fail()
+	}
+}
+
+func TestBroadcastScalar(t *testing.T) {
+	big := [8]int{}
+	Broadcast[int](&big, 99)
+
+	if !reflect.DeepEqual(big, [8]int{99, 99, 99, 99, 99, 99, 99, 99}) {
 		t.Fail()
 	}
 }

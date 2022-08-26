@@ -43,8 +43,10 @@
 * Mask vectors should be opaque in order to support future vector length extension
   * e.g. Arm SVE permits up to 2048 bit vector supporting byte operations, which implies 256-bit masks
 * Mask vectors are a separate type
+* Guide users that the package is for numeric vectors (including byte, rune and complex)
+  * If it were a standard package it should be `math/vec` or `math/vector`
 
-  
+
 ## Status
 
 I am not very familiar with programming vector CPUs so it is likely that common idioms are not well supported.
@@ -64,8 +66,24 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 
 ## To do
 
-* Vector.Slice() to return a slice of an otherwise-opaque vector's elements
+* **Arrange generic type params so hard-to-infer params appear earlier**
+* **Revisit automatic broadcast - is it worth the extra type system complexity? (vs `Add(&z, &x, Broadcast[int,[8]int](&y)`)**
+* Interlace/Deinterlace should return 2 vectors of the same size (see Rust simd)
 * Mix
+* Vector.Slice() to return a slice of an otherwise-opaque vector's elements
+* **Reduction can be performed repeatedly across vectors via orchestrating remaining lanes**
+  * Lanes/Bool should support different reduction strategies: FirstToLast, LastToFirst, BinarySplit
+    * Possible lane patterns
+      * 1111, 0111, 0011, 0001
+      * 1111, 1110, 1100, 1000
+      * 1000, 0100, 0010, 0001
+      * 0001, 0010, 0100, 1000
+      * 1111, 1010, 1000
+      * 1111, 0101, 0001
+      * An efficient way to reverse the lane mask halves number of patterns
+        * Possibly a bool 'reverse' param
+      * Presumably it should be possible to AND these with an initial lane mask
+        * Don't run an iteration in which pattern is all zero - it should be a no-op
 * Horizontal instructions and naming convention
   * "Horizontal" "Across" "All" "Vector" "Lanes" "Element(s)"
 * Loop tail and alignment operations
@@ -84,21 +102,15 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 * Extended multiply and divide (i.e. 32b x 32b -> 64b)
 * Complex number operations?
 * Interlace/Deinterlace could be Zip/Unzip
+  * By analogy to FP, Zip should take 2 x `[N]T` and return `[N][2]T` but I'm not sure this really helps
 * BlendAdd, BlendSub etc - m = false: return a, m = true: return a+b
   * Emulates x += 10 (vs Add which emulates x+10)
   * Make consistent with Add, Sub...
   * Maybe `BlendAdd(m, &a, b)`? Or `AddBlend`?
     * Should `Blend` also take a pointer to assign?
-* Zero/SetZero might be better named Copy
 * SVE-like mask operators
   * Need to understand these better
   * BreakBefore, BreakAfter
-* Generate mask blocks, e.g. Even() == Group(1), Group(2)
-  * Could be used for Interlace provided we validate the mask has N/2 set bits
-  * Could be used to Partition() into 2 slices - like Deinterlace but without
-* `fluent.New16[int]` actually returns Masked16 around a new vector so you can `.Blend(p).Add(a,b)`
-* **Investigate `Ranger[Element]` constraint** to match `<-chan Element` and `[]Element`
-  * If it works, have a single `Consume` method
 * Panic/error if 2+ Bunch elements can't fit in vector size
 * How do we deal with Convert()? It will generally return a different vector length for a different type.
   * Could return a slice of bunches?
@@ -110,6 +122,10 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 * Parallel LoadCorresponding
   * Loads each Bunch in parallel, stopping when the shortest one is full or the first Reader is empty
 * `Truncate` a vector to get a smaller size (ie. split and discard)
+
+## Advantages
+
+* Works with Go's type system to reduce the size of the API and the number of types
 
 ## Disadvantages
 
@@ -138,6 +154,11 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 
 ## Design variants
 
+* Broadcasting scalars involves a design trade-off between
+  * allocating and copying scalar to target vector length or
+  * more complex type constraints to allow for a copy-free scalar argument
+    * the complex type constraints tend to spread through functions that can accept a broadcast argument
+    * hence may be better to copy and trust compiler intrinsics to elide the copy where possible
 * It is possible to reduce the width of type supported by longer vectors in sympathy with hardware
   * Can be done by having narrower constraints on types within the package
     * e.g. `type Number interface { Float32 | Integer32 }`
