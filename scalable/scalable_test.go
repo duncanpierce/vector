@@ -38,7 +38,7 @@ func TestBunchCanConsumeSlice(t *testing.T) {
 	b := NewBunch[byte]()
 	original := "hello world from scalable vector land"
 	v := []byte(original)
-	slice := Slice(v)
+	slice := FromSlice(&v)
 	b.Load(slice)
 
 	if b.Active().Count() != len(original) {
@@ -50,16 +50,16 @@ func TestBunchCanConsumeSlice(t *testing.T) {
 		t.Errorf("wrong result - got %v", r)
 	}
 
-	sliceIo := slice.(*sliceIo[byte])
-	if len(sliceIo.Elements) != 0 {
-		t.Errorf("all elements should have been consumed from slice - still have %v", sliceIo.Elements)
+	sliceIo := slice.(*sliceReader[byte])
+	if len(*sliceIo.slice) != 0 {
+		t.Errorf("all elements should have been consumed from slice - still have %v", *sliceIo.slice)
 	}
 }
 
 func TestBunchConsumesPartOfLargeSlice(t *testing.T) {
 	b := NewBunch[int64]()
 	original := []int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
-	slice := Slice(original)
+	slice := FromSlice(&original)
 	b.Load(slice)
 
 	if b.Active().Count() != 8 {
@@ -71,15 +71,15 @@ func TestBunchConsumesPartOfLargeSlice(t *testing.T) {
 		t.Errorf("wrong result - got %v", r)
 	}
 
-	sliceIo := slice.(*sliceIo[int64])
-	if len(sliceIo.Elements) != 8 {
-		t.Errorf("elements should remain in slice - only have %v", sliceIo.Elements)
+	sliceIo := slice.(*sliceReader[int64])
+	if len(*sliceIo.slice) != 8 {
+		t.Errorf("elements should remain in slice - only have %v", *sliceIo.slice)
 	}
 }
 
 func TestMultiply(t *testing.T) {
 	b := NewBunch[int64]()
-	b.Load(Slice([]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}))
+	b.Load(FromSlice(&[]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}))
 
 	r := NewBunch[int64]()
 	r.Mul(b, b)

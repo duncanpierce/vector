@@ -29,3 +29,14 @@ func (p Predicate) Set(i int, b bool) (result Predicate) {
 func (p Predicate) Count() int {
 	return bits.OnesCount64(p.mask)
 }
+
+func (p Predicate) Remaining() bool {
+	return p.Count() != 0
+}
+
+func (p Predicate) For(process func() (remainingLanes Predicate)) {
+	lanes := p
+	for lanes.Remaining() {
+		lanes = process()
+	}
+}

@@ -8,6 +8,7 @@ import (
 
 type (
 	Bunch[Element any] interface {
+		Slice() []Element
 		Load(source Reader[Element])
 		Store(dest Writer[Element])
 		Active() Predicate
@@ -49,6 +50,10 @@ func NewBunch[T any]() (b Bunch[T]) {
 		b = &bunch[T, [64]T]{}
 	}
 	return
+}
+
+func (b *bunch[Element, Array]) Slice() []Element {
+	panic("implement this - tricky within the type system")
 }
 
 func (b *bunch[Element, Array]) Store(f Writer[Element]) {
