@@ -12,4 +12,11 @@ type (
 		// mask has enough bits for each lane of the largest supported vector size
 		mask uint64
 	}
+
+	Predicate interface{}
+)
+
+var (
+	_ Predicate = Lanes[int]{}
+	_ Predicate = Bool{}
 )

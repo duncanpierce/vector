@@ -22,64 +22,69 @@ type (
 	// Vec64 is a vector with 64 elements.
 	Vec64[E any] [64]E
 
-	// Scalar holds a scalar value that can be used as a vector with the same value in all lanes.
-	Scalar[E any] [1]E
+	// broadcast holds a single value that can be used as a vector with the same value in all lanes.
+	broadcast[E any] [1]E
 
-	// Vector is an interface that represents any fixed-length or scalable vector or a scalar value.
-	Vector[E any] interface {
-		Slice() (slice []E, broadcast bool)
+	// A slicer is a value that can be sliced.
+	slicer[E any] interface {
+		slice() (slice []E, broadcast bool)
 	}
 
-	// FixedVector is a type constraint that matches any fixed-length vector.
+	// FixedVector is a type constraint that matches any fixed-length vector or scalar.
 	FixedVector[E any] interface {
-		Vec1[E] | Vec2[E] | Vec4[E] | Vec8[E] | Vec16[E] | Vec32[E] | Vec64[E] | Scalar[E]
+		*Vec1[E] | *Vec2[E] | *Vec4[E] | *Vec8[E] | *Vec16[E] | *Vec32[E] | *Vec64[E] | *broadcast[E]
+		//slicer[E]
 	}
 
-	FixedVectorPointer[E any] interface {
-		*Vec1[E] | *Vec2[E] | *Vec4[E] | *Vec8[E] | *Vec16[E] | *Vec32[E] | *Vec64[E] | *Scalar[E]
-		Vector[E]
+	ScalableVector[E any] interface {
+		//slicer[E]
+	}
+
+	Vector[E any] interface {
+		FixedVector[E] | ScalableVector[E]
+		slicer[E]
 	}
 )
 
 var (
-	_ Vector[int] = &Vec1[int]{}
-	_ Vector[int] = &Vec2[int]{}
-	_ Vector[int] = &Vec4[int]{}
-	_ Vector[int] = &Vec8[int]{}
-	_ Vector[int] = &Vec16[int]{}
-	_ Vector[int] = &Vec32[int]{}
-	_ Vector[int] = &Vec64[int]{}
-	_ Vector[int] = Scalar[int]{}
+	_ slicer[int] = &Vec1[int]{}
+	_ slicer[int] = &Vec2[int]{}
+	_ slicer[int] = &Vec4[int]{}
+	_ slicer[int] = &Vec8[int]{}
+	_ slicer[int] = &Vec16[int]{}
+	_ slicer[int] = &Vec32[int]{}
+	_ slicer[int] = &Vec64[int]{}
+	_ slicer[int] = broadcast[int]{}
 )
 
-func (s Scalar[E]) Slice() (slice []E, broadcast bool) {
+func (s broadcast[E]) slice() (slice []E, broadcast bool) {
 	return s[:], true
 }
 
-func (v *Vec1[E]) Slice() (slice []E, broadcast bool) {
+func (v *Vec1[E]) slice() (slice []E, broadcast bool) {
 	return (*v)[:], false
 }
 
-func (v *Vec2[E]) Slice() (slice []E, broadcast bool) {
+func (v *Vec2[E]) slice() (slice []E, broadcast bool) {
 	return (*v)[:], false
 }
 
-func (v *Vec4[E]) Slice() (slice []E, broadcast bool) {
+func (v *Vec4[E]) slice() (slice []E, broadcast bool) {
 	return (*v)[:], false
 }
 
-func (v *Vec8[E]) Slice() (slice []E, broadcast bool) {
+func (v *Vec8[E]) slice() (slice []E, broadcast bool) {
 	return (*v)[:], false
 }
 
-func (v *Vec16[E]) Slice() (slice []E, broadcast bool) {
+func (v *Vec16[E]) slice() (slice []E, broadcast bool) {
 	return (*v)[:], false
 }
 
-func (v *Vec32[E]) Slice() (slice []E, broadcast bool) {
+func (v *Vec32[E]) slice() (slice []E, broadcast bool) {
 	return (*v)[:], false
 }
 
-func (v *Vec64[E]) Slice() (slice []E, broadcast bool) {
+func (v *Vec64[E]) slice() (slice []E, broadcast bool) {
 	return (*v)[:], false
 }

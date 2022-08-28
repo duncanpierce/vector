@@ -6,8 +6,8 @@ import (
 )
 
 func TestCompareFloat(t *testing.T) {
-	x := [2]float64{1, 2}
-	y := [2]float64{0, 4}
+	x := Vec2[float64]{1, 2}
+	y := Vec2[float64]{0, 4}
 	z := Lanes[float64]{}
 	LessThan[float64](&z, &x, &y)
 	t.Fail()
@@ -86,7 +86,7 @@ func TestAddComplex(t *testing.T) {
 
 func TestSliceVector(t *testing.T) {
 	vector := Vec4[int]{2, 3, 4, 5}
-	slice, _ := vector.Slice()
+	slice, _ := vector.slice()
 	if len(slice) != len(vector) {
 		t.Fail()
 	}

@@ -260,3 +260,9 @@ func unsafeSlice[E any, V constraintsExt.Vector[E]](v *V) (slice []E) {
 	// to be constrained. So it is not a trivial extension to the language conceptually.
 	return unsafe.Slice((*E)(unsafe.Pointer(v)), len(*v))
 ```
+
+## Lifted operations
+
+* `z := x <op> y` for `op` in `+ - * / & | &^ ^ << >>`
+* `z := <op> x` for `op` in `& * - ^`
+* `z := <type>(x)`
