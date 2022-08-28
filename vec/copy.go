@@ -1,17 +1,9 @@
 package vec
 
 func Copy[E any, Z, X Vector[E]](z Z, x X) {
-	xSlice, xBroad := x.slice()
-	zSlice, _ := z.slice()
-	assignable[E](zSlice, xSlice, xBroad, "x")
-	if xBroad {
-		for len(zSlice) > 0 {
-			copy(zSlice, xSlice)
-			zSlice = zSlice[len(xSlice):]
-		}
-	} else {
-		copy(zSlice, xSlice)
-	}
+	unary[E](z, x, func(x E) E {
+		return x
+	})
 }
 
 //func Replicate[E any, Z, X FixedVector[E]](z Z, x X) {

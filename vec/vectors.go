@@ -27,7 +27,7 @@ type (
 
 	// A slicer is a value that can be sliced.
 	slicer[E any] interface {
-		slice() (slice []E, broadcast bool)
+		elements() elements[E]
 	}
 
 	// FixedVector is a type constraint that matches any fixed-length vector or scalar.
@@ -57,34 +57,34 @@ var (
 	_ slicer[int] = broadcast[int]{}
 )
 
-func (s broadcast[E]) slice() (slice []E, broadcast bool) {
-	return s[:], true
+func (s broadcast[E]) elements() elements[E] {
+	return elements[E]{s[:], true}
 }
 
-func (v *Vec1[E]) slice() (slice []E, broadcast bool) {
-	return (*v)[:], false
+func (v *Vec1[E]) elements() elements[E] {
+	return elements[E]{(*v)[:], false}
 }
 
-func (v *Vec2[E]) slice() (slice []E, broadcast bool) {
-	return (*v)[:], false
+func (v *Vec2[E]) elements() elements[E] {
+	return elements[E]{(*v)[:], false}
 }
 
-func (v *Vec4[E]) slice() (slice []E, broadcast bool) {
-	return (*v)[:], false
+func (v *Vec4[E]) elements() elements[E] {
+	return elements[E]{(*v)[:], false}
 }
 
-func (v *Vec8[E]) slice() (slice []E, broadcast bool) {
-	return (*v)[:], false
+func (v *Vec8[E]) elements() elements[E] {
+	return elements[E]{(*v)[:], false}
 }
 
-func (v *Vec16[E]) slice() (slice []E, broadcast bool) {
-	return (*v)[:], false
+func (v *Vec16[E]) elements() elements[E] {
+	return elements[E]{(*v)[:], false}
 }
 
-func (v *Vec32[E]) slice() (slice []E, broadcast bool) {
-	return (*v)[:], false
+func (v *Vec32[E]) elements() elements[E] {
+	return elements[E]{(*v)[:], false}
 }
 
-func (v *Vec64[E]) slice() (slice []E, broadcast bool) {
-	return (*v)[:], false
+func (v *Vec64[E]) elements() elements[E] {
+	return elements[E]{(*v)[:], false}
 }

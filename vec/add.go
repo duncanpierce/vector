@@ -5,10 +5,7 @@ import (
 )
 
 func Add[E constraintsExt.Number](z, x, y Vector[E]) {
-	xSlice, xBroad := x.slice()
-	ySlice, yBroad := y.slice()
-	zSlice, _ := z.slice()
-	assignable[E](zSlice, xSlice, xBroad, "x")
-	assignable[E](zSlice, ySlice, yBroad, "y")
-	// TODO implement this somehow
+	binary[E](z, x, y, func(x, y E) E {
+		return x + y
+	})
 }
