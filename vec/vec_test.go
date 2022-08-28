@@ -57,8 +57,8 @@ func TestAddComplex(t *testing.T) {
 }
 
 func TestConvert(t *testing.T) {
-	from := [4]int{1, 2, 3, 4}
-	to := [4]float32{}
+	from := Vec4[int]{1, 2, 3, 4}
+	to := Vec4[float32]{}
 	Convert[float32, int](&to, &from)
 
 	if !reflect.DeepEqual(to, [4]float32{1, 2, 3, 4}) {
@@ -76,12 +76,26 @@ func TestCopy(t *testing.T) {
 	}
 }
 
-func TestCopyScalar(t *testing.T) {
+func TestCopyFromBroadcast(t *testing.T) {
 	big := Vec8[int]{}
 	scalar := Broadcast(99)
 	Copy[int](&big, scalar)
 
 	if !reflect.DeepEqual(big, Vec8[int]{99, 99, 99, 99, 99, 99, 99, 99}) {
 		t.Fail()
+	}
+}
+
+func TestCopyTooBigToBroadcast(t *testing.T) {
+	tooBig := Vec8[int]{}
+	scalar := Broadcast(99)
+
+	defer mustPanic(t)
+	Copy[int](scalar, &tooBig)
+}
+
+func mustPanic(t *testing.T) {
+	if recover() == nil {
+		t.Errorf("panic was expected but didn't happen")
 	}
 }
