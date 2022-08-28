@@ -40,7 +40,7 @@ func TestAddBroadcastY(t *testing.T) {
 
 	Add[float64](&z, &x, y)
 
-	if !reflect.DeepEqual(z, Vec4[float64]{5, 2, 1, 0}) {
+	if !reflect.DeepEqual(z, Vec4[float64]{11, 12, 13, 14}) {
 		t.Fail()
 	}
 }
