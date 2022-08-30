@@ -10,6 +10,28 @@ func Set[Z Bool](z Z, lane int, value bool) {
 	}
 }
 
+func SetAll[Z Bool](z Z) {
+	l := z.lanes()
+	for i := 0; i < l.nLanes; i++ {
+		Set(z, i, true)
+	}
+}
+
+func SetNone[Z Bool](z Z) {
+	l := z.lanes()
+	for i := 0; i < l.nLanes; i++ {
+		Set(z, i, false)
+	}
+}
+
+func SetFirst[Z Bool](z Z) {
+	Set(z, 0, true)
+}
+
+func SetLast[Z Bool](z Z) {
+	Set(z, z.lanes().nLanes-1, true)
+}
+
 func IsSet[X Bool](x X, lane int) bool {
 	l := x.lanes()
 	if lane < l.nLanes && (*l.mask&(1<<lane) != 0) {
