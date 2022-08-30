@@ -33,12 +33,9 @@ type (
 	// FixedVector is a type constraint that matches any fixed-length vector or scalar.
 	FixedVector[E any] interface {
 		*Vec1[E] | *Vec2[E] | *Vec4[E] | *Vec8[E] | *Vec16[E] | *Vec32[E] | *Vec64[E] | *broadcast[E]
-		//slicer[E]
 	}
 
-	ScalableVector[E any] interface {
-		//slicer[E]
-	}
+	ScalableVector[E any] interface{}
 
 	Vector[E any] interface {
 		FixedVector[E] | ScalableVector[E]
