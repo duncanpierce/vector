@@ -41,6 +41,11 @@ type (
 		FixedVector[E] | ScalableVector[E]
 		slicer[E]
 	}
+
+	Mask struct {
+		zero bool
+		m    uint64
+	}
 )
 
 var (

@@ -7,11 +7,30 @@ type elements[E any] struct {
 	broadcast bool
 }
 
+const allBits = uint64(0xFFFFFFFFFFFFFFFF)
+
 func (x elements[E]) readIndex(i int) E {
 	if x.broadcast {
 		return x.slice[0]
 	} else {
 		return x.slice[i]
+	}
+}
+
+func (z elements[E]) masked(m *Mask, f func(index, count int)) {
+	mask, zero := allBits, false
+	var zeroValue E
+	if m != nil {
+		mask, zero = m.m, m.zero
+	}
+	l := len(z.slice)
+	for index, count := 0, 0; index < l; index++ {
+		if mask&(1<<index) != 0 {
+			f(index, count)
+			count++
+		} else if zero {
+			z.slice[index] = zeroValue
+		}
 	}
 }
 
@@ -24,12 +43,16 @@ func unary[Z, X any](z Vector[Z], x Vector[X], f func(x X) Z) {
 }
 
 func binary[Z, XY any](z Vector[Z], x, y Vector[XY], f func(x, y XY) Z) {
+	binaryMasked[Z, XY](nil, z, x, y, f)
+}
+
+func binaryMasked[Z, XY any](m *Mask, z Vector[Z], x, y Vector[XY], f func(x XY, y XY) Z) {
 	xEl, yEl, zEl := x.elements(), y.elements(), z.elements()
 	compatible[Z, XY]("z", zEl, "x", xEl)
 	compatible[Z, XY]("z", zEl, "y", yEl)
-	for i := 0; i < len(zEl.slice); i++ {
-		zEl.slice[i] = f(xEl.readIndex(i), yEl.readIndex(i))
-	}
+	z.elements().masked(m, func(index, count int) {
+		zEl.slice[index] = f(xEl.readIndex(index), yEl.readIndex(index))
+	})
 }
 
 func binaryBool[XY any](z Bool, x, y Vector[XY], f func(x, y XY) bool) {

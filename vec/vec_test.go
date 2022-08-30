@@ -36,9 +36,37 @@ func TestAdd(t *testing.T) {
 	y := Vec4[float64]{4, 0, -2, -4}
 	z := Vec4[float64]{}
 
-	Add[float64](&z, &x, &y)
+	Add[float64](&z, &x, &y, nil)
 
 	if !reflect.DeepEqual(z, Vec4[float64]{5, 2, 1, 0}) {
+		t.Fail()
+	}
+}
+
+func TestAddBlending(t *testing.T) {
+	x := Vec4[float64]{1, 2, 3, 5}
+	y := Vec4[float64]{4, 0, -2, -4}
+	z := Vec4[float64]{99, 99, 99, 99}
+	b := Bool4{}
+	SetAll(&b)
+	Set(&b, 2, false)
+	Add[float64](&z, &x, &y, Blending(&b))
+
+	if !reflect.DeepEqual(z, Vec4[float64]{5, 2, 99, 1}) {
+		t.Fail()
+	}
+}
+
+func TestAddZeroing(t *testing.T) {
+	x := Vec4[float64]{1, 2, 3, 5}
+	y := Vec4[float64]{4, 0, -2, -4}
+	z := Vec4[float64]{99, 99, 99, 99}
+	b := Bool4{}
+	SetAll(&b)
+	Set(&b, 2, false)
+	Add[float64](&z, &x, &y, Zeroing(&b))
+
+	if !reflect.DeepEqual(z, Vec4[float64]{5, 2, 0, 1}) {
 		t.Fail()
 	}
 }
@@ -48,7 +76,7 @@ func TestAddBroadcastY(t *testing.T) {
 	y := Broadcast[float64](10.0)
 	z := Vec4[float64]{}
 
-	Add[float64](&z, &x, y)
+	Add[float64](&z, &x, y, nil)
 
 	if !reflect.DeepEqual(z, Vec4[float64]{11, 12, 13, 14}) {
 		t.Fail()
@@ -59,7 +87,7 @@ func TestAddComplex(t *testing.T) {
 	x := Vec2[complex128]{1 + 2i, 2 + 3i}
 	y := Vec2[complex128]{0 + 1i, 4 + 5i}
 	z := Vec2[complex128]{}
-	Add[complex128](&z, &x, &y)
+	Add[complex128](&z, &x, &y, nil)
 
 	if !reflect.DeepEqual(z, Vec2[complex128]{1 + 3i, 6 + 8i}) {
 		t.Fail()

@@ -11,8 +11,8 @@ func Convert[To, From constraintsExt.ConvertableNumber, Z Vector[To], X Vector[F
 	})
 }
 
-func Add[E constraintsExt.Number](z, x, y Vector[E]) {
-	binary(z, x, y, func(x, y E) E {
+func Add[E constraintsExt.Number](z, x, y Vector[E], m *Mask) {
+	binaryMasked[E](m, z, x, y, func(x, y E) E {
 		return x + y
 	})
 }
