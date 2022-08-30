@@ -88,3 +88,97 @@ func (v *Vec32[E]) elements() elements[E] {
 func (v *Vec64[E]) elements() elements[E] {
 	return elements[E]{(*v)[:], false}
 }
+
+type (
+	Bool1 struct {
+		mask uint64
+	}
+
+	Bool2 struct {
+		mask uint64
+	}
+
+	Bool4 struct {
+		mask uint64
+	}
+
+	Bool8 struct {
+		mask uint64
+	}
+
+	Bool16 struct {
+		mask uint64
+	}
+
+	Bool32 struct {
+		mask uint64
+	}
+
+	Bool64 struct {
+		mask uint64
+	}
+
+	FixedBool interface {
+		*Bool1 | *Bool2 | *Bool4 | *Bool8 | *Bool16 | *Bool32 | *Bool64
+	}
+
+	ScalableBool interface {
+	}
+
+	Bool interface {
+		FixedBool | ScalableBool
+		lanes() lanes
+	}
+
+	lanes struct {
+		mask   *uint64
+		nLanes int
+	}
+)
+
+var (
+	_ Bool = &Bool1{}
+	_ Bool = &Bool2{}
+	_ Bool = &Bool4{}
+	_ Bool = &Bool8{}
+	_ Bool = &Bool16{}
+	_ Bool = &Bool32{}
+	_ Bool = &Bool64{}
+)
+
+func (b *Bool1) lanes() lanes {
+	return lanes{&b.mask, 1}
+}
+
+func (b *Bool2) lanes() lanes {
+	return lanes{&b.mask, 2}
+}
+
+func (b *Bool4) lanes() lanes {
+	return lanes{&b.mask, 4}
+}
+
+func (b *Bool8) lanes() lanes {
+	return lanes{&b.mask, 8}
+}
+
+func (b *Bool16) lanes() lanes {
+	return lanes{&b.mask, 16}
+}
+
+func (b *Bool32) lanes() lanes {
+	return lanes{&b.mask, 32}
+}
+
+func (b *Bool64) lanes() lanes {
+	return lanes{&b.mask, 64}
+}
+
+func (l lanes) set(lane int, active bool) {
+	bit := uint64(1 << lane)
+	mask := (*l.mask) &^ bit
+	if active {
+		mask |= bit
+	}
+	*l.mask = mask
+}

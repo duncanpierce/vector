@@ -11,14 +11,14 @@ func Broadcast[E any](x E) *broadcast[E] {
 	return &broadcast[E]{x}
 }
 
-// NewScalable returns a vector of the best length for the element type. The length is chosen to make best use of the CPU's vector instructions.
-func NewScalable[E any]() ScalableVector[E] {
-	return NewScalableFor[E, E]()
+// NewVector returns a vector of the best length for the element type. The length is chosen to make best use of the CPU's vector instructions.
+func NewVector[E any]() ScalableVector[E] {
+	return NewVectorFor[E, E]()
 }
 
-// NewScalableFor returns a vector sized to match the length of another vector with elements of type SizeFor.
-// NewScalableFor should be used when you require vectors with the same number of elements but different types.
-func NewScalableFor[E any, SizeFor any]() ScalableVector[E] {
+// NewVectorFor returns a ScalableVector sized to match the length of another vector with elements of type SizeFor.
+// NewVectorFor should be used when you require vectors with the same number of elements but different types.
+func NewVectorFor[E any, SizeFor any]() ScalableVector[E] {
 	switch ScalableVectorLen[SizeFor]() {
 	case 1:
 		return &Vec1[E]{}
@@ -35,11 +35,11 @@ func NewScalableFor[E any, SizeFor any]() ScalableVector[E] {
 	case 64:
 		return &Vec64[E]{}
 	default:
-		panic("no suitable vector size found")
+		panic("no suitable size found")
 	}
 }
 
-// ScalableVectorLen returns the vector length that NewScalable will use to create a vector of elements of type E.
+// ScalableVectorLen returns the vector length that NewVector will use to create a vector of elements of type E.
 func ScalableVectorLen[E any]() int {
 	var el E
 	size := uint64(unsafe.Sizeof(el))
@@ -49,4 +49,26 @@ func ScalableVectorLen[E any]() int {
 		elementSize *= 2
 	}
 	return runtimeExt.VectorLenBytes() / elementSize
+}
+
+// NewBoolFor returns a ScalableBool sized to the number of elements in a ScalableVector of type SizeFor.
+func NewBoolFor[SizeFor any]() ScalableBool {
+	switch ScalableVectorLen[SizeFor]() {
+	case 1:
+		return &Bool1{}
+	case 2:
+		return &Bool2{}
+	case 4:
+		return &Bool4{}
+	case 8:
+		return &Bool8{}
+	case 16:
+		return &Bool16{}
+	case 32:
+		return &Bool32{}
+	case 64:
+		return &Bool64{}
+	default:
+		panic("no suitable size found")
+	}
 }

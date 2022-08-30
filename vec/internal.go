@@ -17,7 +17,7 @@ func (x elements[E]) readIndex(i int) E {
 
 func unary[Z, X any](z Vector[Z], x Vector[X], f func(x X) Z) {
 	xEl, zEl := x.elements(), z.elements()
-	compatible[Z, X](zEl, xEl, "x")
+	compatible[Z, X]("z", zEl, "x", xEl)
 	for i := 0; i < len(zEl.slice); i++ {
 		zEl.slice[i] = f(xEl.readIndex(i))
 	}
@@ -25,21 +25,42 @@ func unary[Z, X any](z Vector[Z], x Vector[X], f func(x X) Z) {
 
 func binary[Z, XY any](z Vector[Z], x, y Vector[XY], f func(x, y XY) Z) {
 	xEl, yEl, zEl := x.elements(), y.elements(), z.elements()
-	compatible[Z, XY](zEl, xEl, "x")
-	compatible[Z, XY](zEl, yEl, "y")
+	compatible[Z, XY]("z", zEl, "x", xEl)
+	compatible[Z, XY]("z", zEl, "y", yEl)
 	for i := 0; i < len(zEl.slice); i++ {
 		zEl.slice[i] = f(xEl.readIndex(i), yEl.readIndex(i))
 	}
 }
 
-func compatible[Z, X any](z elements[Z], x elements[X], xIdent string) {
+func binaryBool[XY any](z Bool, x, y Vector[XY], f func(x, y XY) bool) {
+	xEl, yEl, zEl := x.elements(), y.elements(), z.lanes()
+	compatibleBool[XY]("z", zEl, "x", xEl)
+	compatibleBool[XY]("z", zEl, "y", yEl)
+	for i := 0; i < zEl.nLanes; i++ {
+		zEl.set(i, f(xEl.readIndex(i), yEl.readIndex(i)))
+	}
+}
+
+func compatible[Z, X any](zIdent string, z elements[Z], xIdent string, x elements[X]) {
 	if x.broadcast {
 		if len(x.slice) > len(z.slice) {
-			panic(fmt.Sprintf("broadcastable value %s cannot be longer than vector z", xIdent))
+			panic(fmt.Sprintf("broadcastable value %s cannot be longer than vector %s", xIdent, zIdent))
 		}
 	} else {
 		if len(x.slice) != len(z.slice) {
-			panic(fmt.Sprintf("vector %s must be the same length as vector z", xIdent))
+			panic(fmt.Sprintf("vector %s must be the same length as vector %s", xIdent, zIdent))
+		}
+	}
+}
+
+func compatibleBool[X any](zIdent string, z lanes, xIdent string, x elements[X]) {
+	if x.broadcast {
+		if len(x.slice) > z.nLanes {
+			panic(fmt.Sprintf("broadcastable value %s cannot be longer than bool %s", xIdent, zIdent))
+		}
+	} else {
+		if len(x.slice) != z.nLanes {
+			panic(fmt.Sprintf("vector %s must be the same length as bool %s", xIdent, zIdent))
 		}
 	}
 }

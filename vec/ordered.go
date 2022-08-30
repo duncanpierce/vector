@@ -1,11 +1,27 @@
 package vec
 
-import (
-	"golang.org/x/exp/constraints"
-)
+import "golang.org/x/exp/constraints"
 
-func LessThan[E constraints.Ordered, V FixedVector[E]](z *Lanes[E], x, y V) {
-	//xc := any(x).(*[2]E)
-	//yc := any(y).(*[2]E)
-	// TODO implement this
+func Less[E constraints.Ordered, Z Bool, XY Vector[E]](z Z, x, y XY) {
+	binaryBool[E](z, x, y, func(a, b E) bool {
+		return a < b
+	})
+}
+
+func LessOrEqual[E constraints.Ordered, Z Bool, XY Vector[E]](z Z, x, y XY) {
+	binaryBool[E](z, x, y, func(a, b E) bool {
+		return a <= b
+	})
+}
+
+func Greater[E constraints.Ordered, Z Bool, XY Vector[E]](z Z, x, y XY) {
+	binaryBool[E](z, x, y, func(a, b E) bool {
+		return a > b
+	})
+}
+
+func GreaterOrEqual[E constraints.Ordered, Z Bool, XY Vector[E]](z Z, x, y XY) {
+	binaryBool[E](z, x, y, func(a, b E) bool {
+		return a >= b
+	})
 }

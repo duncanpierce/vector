@@ -8,17 +8,27 @@ import (
 func TestCompareFloat(t *testing.T) {
 	x := Vec2[float64]{1, 2}
 	y := Vec2[float64]{0, 4}
-	z := Lanes[float64]{}
-	LessThan[float64](&z, &x, &y)
-	t.Fail()
+	z := Bool2{}
+	Less[float64](&z, &x, &y)
+	if IsSet(&z, 0) {
+		t.Fail()
+	}
+	if !IsSet(&z, 1) {
+		t.Fail()
+	}
 }
 
 func TestEqualComplex(t *testing.T) {
-	x := [2]complex128{1 + 3i, 2}
-	y := [2]complex128{1 + 3i, 4}
-	z := Lanes[complex128]{}
+	x := Vec2[complex128]{1 + 3i, 2}
+	y := Vec2[complex128]{1 + 3i, 4}
+	z := Bool2{}
 	Equal[complex128](&z, &x, &y)
-	t.Fail()
+	if !IsSet(&z, 0) {
+		t.Fail()
+	}
+	if IsSet(&z, 1) {
+		t.Fail()
+	}
 }
 
 func TestAdd(t *testing.T) {
@@ -61,7 +71,7 @@ func TestConvert(t *testing.T) {
 	to := Vec4[float32]{}
 	Convert[float32, int](&to, &from)
 
-	if !reflect.DeepEqual(to, [4]float32{1, 2, 3, 4}) {
+	if !reflect.DeepEqual(to, Vec4[float32]{1, 2, 3, 4}) {
 		t.Fail()
 	}
 }
