@@ -1,5 +1,15 @@
 package vec
 
+func Set[Z Bool](z Z, lane int, value bool) {
+	l := z.lanes()
+	if lane < l.nLanes {
+		*l.mask &^= 1 << lane
+		if value {
+			*l.mask |= 1 << lane
+		}
+	}
+}
+
 func IsSet[X Bool](x X, lane int) bool {
 	l := x.lanes()
 	if lane < l.nLanes && (*l.mask&(1<<lane) != 0) {
