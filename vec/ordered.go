@@ -25,3 +25,21 @@ func GreaterOrEqual[E constraints.Ordered, Z Bool, XY Vector[E]](z Z, x, y XY) {
 		return a >= b
 	})
 }
+
+func Min[E constraints.Ordered, XYZ Vector[E]](z, x, y XYZ) {
+	binary[E, E](z, x, y, func(a, b E) E {
+		if a < b {
+			return a
+		}
+		return b
+	})
+}
+
+func Max[E constraints.Ordered, XYZ Vector[E]](z, x, y XYZ) {
+	binary[E, E](z, x, y, func(a, b E) E {
+		if a > b {
+			return a
+		}
+		return b
+	})
+}

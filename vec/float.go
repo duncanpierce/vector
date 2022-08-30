@@ -16,3 +16,15 @@ func RoundToEven[E constraints.Float, XZ Vector[E]](z, x XZ) {
 		return E(math.RoundToEven(float64(x)))
 	})
 }
+
+func IsInf[E constraints.Float, Z Bool, X Vector[E]](z Z, x X, sign int) {
+	unaryBool[E](z, x, func(x E) bool {
+		return math.IsInf(float64(x), sign)
+	})
+}
+
+func IsNaN[E constraints.Float, Z Bool, X Vector[E]](z Z, x X) {
+	unaryBool[E](z, x, func(x E) bool {
+		return math.IsNaN(float64(x))
+	})
+}

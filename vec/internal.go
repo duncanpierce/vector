@@ -41,6 +41,14 @@ func binaryBool[XY any](z Bool, x, y Vector[XY], f func(x, y XY) bool) {
 	}
 }
 
+func unaryBool[X any](z Bool, x Vector[X], f func(x X) bool) {
+	xEl, zEl := x.elements(), z.lanes()
+	compatibleBool[X]("z", zEl, "x", xEl)
+	for i := 0; i < zEl.nLanes; i++ {
+		zEl.set(i, f(xEl.readIndex(i)))
+	}
+}
+
 func compatible[Z, X any](zIdent string, z elements[Z], xIdent string, x elements[X]) {
 	if x.broadcast {
 		if len(x.slice) > len(z.slice) {
