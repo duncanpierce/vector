@@ -34,23 +34,19 @@ func (z elements[E]) masked(m *Mask, f func(index, count int)) {
 	}
 }
 
-func unary[Z, X any](z Vector[Z], x Vector[X], f func(x X) Z) {
+func unary[Z, X any](m *Mask, z Vector[Z], x Vector[X], f func(x X) Z) {
 	xEl, zEl := x.elements(), z.elements()
 	compatible[Z, X]("z", zEl, "x", xEl)
-	for i := 0; i < len(zEl.slice); i++ {
-		zEl.slice[i] = f(xEl.readIndex(i))
-	}
+	zEl.masked(m, func(index, count int) {
+		zEl.slice[index] = f(xEl.readIndex(index))
+	})
 }
 
-func binary[Z, XY any](z Vector[Z], x, y Vector[XY], f func(x, y XY) Z) {
-	binaryMasked[Z, XY](nil, z, x, y, f)
-}
-
-func binaryMasked[Z, XY any](m *Mask, z Vector[Z], x, y Vector[XY], f func(x XY, y XY) Z) {
+func binary[Z, XY any](m *Mask, z Vector[Z], x, y Vector[XY], f func(x XY, y XY) Z) {
 	xEl, yEl, zEl := x.elements(), y.elements(), z.elements()
 	compatible[Z, XY]("z", zEl, "x", xEl)
 	compatible[Z, XY]("z", zEl, "y", yEl)
-	z.elements().masked(m, func(index, count int) {
+	zEl.masked(m, func(index, count int) {
 		zEl.slice[index] = f(xEl.readIndex(index), yEl.readIndex(index))
 	})
 }

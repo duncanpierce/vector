@@ -107,7 +107,7 @@ func TestConvert(t *testing.T) {
 func TestCopy(t *testing.T) {
 	from := Vec4[int]{1, 2, 3, 4}
 	to := Vec4[int]{}
-	Copy[int](&to, &from)
+	Copy[int](&to, &from, nil)
 
 	if !reflect.DeepEqual(to, Vec4[int]{1, 2, 3, 4}) {
 		t.Fail()
@@ -117,7 +117,7 @@ func TestCopy(t *testing.T) {
 func TestCopyFromBroadcast(t *testing.T) {
 	big := Vec8[int]{}
 	scalar := Broadcast(99)
-	Copy[int](&big, scalar)
+	Copy[int](&big, scalar, nil)
 
 	if !reflect.DeepEqual(big, Vec8[int]{99, 99, 99, 99, 99, 99, 99, 99}) {
 		t.Fail()
@@ -129,7 +129,7 @@ func TestCopyTooBigToBroadcast(t *testing.T) {
 	scalar := Broadcast(99)
 
 	defer mustPanic(t)
-	Copy[int](scalar, &tooBig)
+	Copy[int](scalar, &tooBig, nil)
 }
 
 func mustPanic(t *testing.T) {

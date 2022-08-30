@@ -5,20 +5,20 @@ import (
 	"math/bits"
 )
 
-func OnesCount[E constraints.Unsigned, Z Vector[int], X Vector[E]](z Z, x X) {
-	unary[int, E](z, x, func(x E) int {
+func OnesCount[E constraints.Unsigned, Z Vector[int], X Vector[E]](z Z, x X, m *Mask) {
+	unary[int, E](m, z, x, func(x E) int {
 		return bits.OnesCount64(uint64(x))
 	})
 }
 
-func LeadingZeros[E constraints.Unsigned, Z Vector[int], X Vector[E]](z Z, x X) {
-	unary[int, E](z, x, func(x E) int {
+func LeadingZeros[E constraints.Unsigned, Z Vector[int], X Vector[E]](z Z, x X, m *Mask) {
+	unary[int, E](m, z, x, func(x E) int {
 		return bits.LeadingZeros64(uint64(x))
 	})
 }
 
-func TrailingZeros[E constraints.Unsigned, Z Vector[int], X Vector[E]](z Z, x X) {
-	unary[int, E](z, x, func(x E) int {
+func TrailingZeros[E constraints.Unsigned, Z Vector[int], X Vector[E]](z Z, x X, m *Mask) {
+	unary[int, E](m, z, x, func(x E) int {
 		return bits.TrailingZeros64(uint64(x))
 	})
 }
