@@ -34,3 +34,19 @@ func Div[E constraintsExt.Number](z, x, y Vector[E]) {
 		return x / y
 	})
 }
+
+func Neg[E constraintsExt.Number](z, x Vector[E]) {
+	unary(z, x, func(x E) E {
+		return -x
+	})
+}
+
+func Abs[E constraintsExt.OrderedNumber](z, x Vector[E]) {
+	unary(z, x, func(x E) E {
+		if x < E(0) {
+			return -x
+		} else {
+			return x
+		}
+	})
+}
