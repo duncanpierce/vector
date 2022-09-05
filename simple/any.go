@@ -60,8 +60,7 @@ Address sets elements of vector z to the addresses of slice elements in x, index
 func Address[E any, Z constraintsExt.Vector[*E], X constraintsExt.Vector[[]E], Y constraintsExt.Vector[int]](z *Z, m *lanes.Bool, x *X, y *Y) {
 	lanes.RangeActive[*E](z, m, func(i, j int) {
 		index := (*y)[i]
-		elem := (*x)[i][index]
-		(*z)[i] = &(elem)
+		(*z)[i] = &((*x)[i][index])
 	})
 }
 
