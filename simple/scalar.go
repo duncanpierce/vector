@@ -6,7 +6,7 @@ import (
 )
 
 func Broadcast[E any, Z constraintsExt.Vector[E]](z *Z, m *lanes.Bool, x E) {
-	lanes.Range[E](z, m, func(i, j int) {
+	lanes.RangeActive[E](z, m, func(i, j int) {
 		(*z)[i] = x
 	})
 }

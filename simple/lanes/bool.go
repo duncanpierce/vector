@@ -8,14 +8,14 @@ type Bool struct {
 
 const allBits = 0xffffffffffffffff
 
-func IsSet(m *Bool, i int) bool {
+func IsActive(m *Bool, i int) bool {
 	if m == nil {
 		return true
 	}
 	return (m.m)&(1<<i) != 0
 }
 
-func Set(m *Bool, i int, b bool) {
+func SetActive(m *Bool, i int, b bool) {
 	bit := uint64(1 << i)
 	m.m &^= bit
 	if b {
@@ -23,11 +23,32 @@ func Set(m *Bool, i int, b bool) {
 	}
 }
 
-func Range[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j int)) {
+func RangeActive[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j int)) {
 	j, l := 0, len(*z)
 	for i := 0; i < l; i++ {
-		if IsSet(m, i) {
+		if IsActive(m, i) {
 			f(i, j)
+			j++
+		}
+	}
+}
+
+func RangeInactive[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j int)) {
+	j, l := 0, len(*z)
+	for i := 0; i < l; i++ {
+		if !IsActive(m, i) {
+			f(i, j)
+			j++
+		}
+	}
+}
+
+func RangeAll[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j int, b bool)) {
+	j, l := 0, len(*z)
+	for i := 0; i < l; i++ {
+		active := IsActive(m, i)
+		f(i, j, active)
+		if active {
 			j++
 		}
 	}

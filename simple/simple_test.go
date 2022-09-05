@@ -19,16 +19,16 @@ func TestAddBroadcast(t *testing.T) {
 	m := lanes.Bool{}
 	Equal[int](&m, nil, &z, &[4]int{11, 11, 11, 11})
 
-	if !lanes.IsSet(&m, 0) {
+	if !lanes.IsActive(&m, 0) {
 		t.Fail()
 	}
-	if lanes.IsSet(&m, 1) {
+	if lanes.IsActive(&m, 1) {
 		t.Fail()
 	}
-	if !lanes.IsSet(&m, 2) {
+	if !lanes.IsActive(&m, 2) {
 		t.Fail()
 	}
-	if lanes.IsSet(&m, 3) {
+	if lanes.IsActive(&m, 3) {
 		t.Fail()
 	}
 
