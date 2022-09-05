@@ -24,3 +24,9 @@ func unary[From, To any, Z constraintsExt.Vector[To], X constraintsExt.Vector[Fr
 		(*z)[i] = f((*x)[i])
 	})
 }
+
+func unaryBool[E any, X constraintsExt.Vector[E]](z, m *lanes.Bool, x *X, f func(a E) bool) {
+	lanes.Range[E](x, m, func(i, j int) {
+		lanes.Set(z, i, f((*x)[i]))
+	})
+}
