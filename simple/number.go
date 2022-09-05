@@ -42,3 +42,9 @@ func Convert[To, From constraintsExt.ConvertableNumber, Z constraintsExt.Vector[
 		return To(x)
 	})
 }
+
+func Neg[E constraintsExt.Number, XZ constraintsExt.Vector[E]](z *XZ, m *lanes.Bool, x *XZ) {
+	unary(z, nil, x, func(x E) E {
+		return -x
+	})
+}

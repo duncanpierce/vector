@@ -47,3 +47,12 @@ func Max[E constraints.Ordered, XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes.B
 		return b
 	})
 }
+
+func Abs[E constraintsExt.OrderedNumber, XZ constraintsExt.Vector[E]](z *XZ, m *lanes.Bool, x *XZ) {
+	unary(z, m, x, func(a E) E {
+		if a < 0 {
+			a = -a
+		}
+		return a
+	})
+}
