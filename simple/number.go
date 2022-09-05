@@ -28,3 +28,10 @@ func Div[E constraintsExt.Number, XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes
 		return a / b
 	})
 }
+
+// Convert returns a vector with all elements converted to another numeric type. Complex numbers cannot be converted to other types.
+func Convert[To, From constraintsExt.ConvertableNumber, Z constraintsExt.Vector[To], X constraintsExt.Vector[From]](z *Z, x *X) {
+	unary(z, nil, x, func(x From) To {
+		return To(x)
+	})
+}

@@ -19,8 +19,8 @@ func binaryBool[E any, XY constraintsExt.Vector[E]](z *lanes.Bool, m *lanes.Bool
 	})
 }
 
-func unary[E any, XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes.Bool, x *XYZ, f func(a E) E) {
-	lanes.Range[E](z, m, func(i, j int) {
+func unary[From, To any, Z constraintsExt.Vector[To], X constraintsExt.Vector[From]](z *Z, m *lanes.Bool, x *X, f func(a From) To) {
+	lanes.Range[To](z, m, func(i, j int) {
 		(*z)[i] = f((*x)[i])
 	})
 }
