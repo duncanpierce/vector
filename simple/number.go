@@ -23,6 +23,13 @@ func Mul[E constraintsExt.Number, XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes
 	})
 }
 
+// Note this is named FMA in math package.
+func MulAdd[E constraintsExt.Number, WXYZ constraintsExt.Vector[E]](z *WXYZ, m *lanes.Bool, w, x, y *WXYZ) {
+	ternary[E](z, m, w, x, y, func(a, b, c E) E {
+		return a*b + c
+	})
+}
+
 func Div[E constraintsExt.Number, XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes.Bool, x, y *XYZ) {
 	binary[E](z, m, x, y, func(a, b E) E {
 		return a / b

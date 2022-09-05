@@ -5,6 +5,12 @@ import (
 	"github.com/duncanpierce/vector/simple/lanes"
 )
 
+func ternary[E any, WXYZ constraintsExt.Vector[E]](z *WXYZ, m *lanes.Bool, w, x, y *WXYZ, f func(a, b, c E) E) {
+	lanes.Range[E](z, m, func(i, j int) {
+		(*z)[i] = f((*w)[i], (*x)[i], (*y)[i])
+	})
+}
+
 func binary[E any, XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes.Bool, x, y *XYZ, f func(a, b E) E) {
 	lanes.Range[E](z, m, func(i, j int) {
 		(*z)[i] = f((*x)[i], (*y)[i])
