@@ -1,8 +1,8 @@
-package simple
+package simd
 
 import (
 	"github.com/duncanpierce/vector/constraintsExt"
-	"github.com/duncanpierce/vector/simple/lanes"
+	"github.com/duncanpierce/vector/simd/lanes"
 )
 
 func ternary[E any, WXYZ constraintsExt.Vector[E]](z *WXYZ, m *lanes.Bool, w, x, y *WXYZ, f func(a, b, c E) E) {

@@ -1,8 +1,8 @@
-package simple
+package simd
 
 import (
 	"github.com/duncanpierce/vector/constraintsExt"
-	"github.com/duncanpierce/vector/simple/lanes"
+	"github.com/duncanpierce/vector/simd/lanes"
 )
 
 func Add[E constraintsExt.Number, XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes.Bool, x, y *XYZ) {

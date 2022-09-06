@@ -1,7 +1,7 @@
-package simple
+package simd
 
 import (
-	"github.com/duncanpierce/vector/simple/lanes"
+	"github.com/duncanpierce/vector/simd/lanes"
 	"reflect"
 	"testing"
 )

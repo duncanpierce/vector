@@ -1,4 +1,4 @@
-package simple
+package simd
 
 import (
 	"github.com/duncanpierce/vector/constraintsExt"
