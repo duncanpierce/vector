@@ -17,11 +17,17 @@ func binary[E any, XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes.Bool, x, y *XY
 	})
 }
 
+func binaryConvert[E, F any, Z constraintsExt.Vector[F], XY constraintsExt.Vector[E]](z *Z, m *lanes.Bool, x, y *XY, f func(a, b E) F) {
+	lanes.RangeActive[F](z, m, func(i, j int) {
+		(*z)[i] = f((*x)[i], (*y)[i])
+	})
+}
+
 func binaryBool[E any, XY constraintsExt.Vector[E]](z *lanes.Bool, m *lanes.Bool, x, y *XY, f func(a, b E) bool) {
 	// TODO there is a risk here that a Bool is used for a wider vector, when reused for a narrower vector, it retains meaningless (?) upper bits
 	// In particular, lane count will be unusable
 	lanes.RangeActive[E](x, m, func(i, j int) {
-		lanes.SetActive(z, i, f((*x)[i], (*y)[i]))
+		lanes.Set(z, i, f((*x)[i], (*y)[i]))
 	})
 }
 
@@ -31,8 +37,14 @@ func unary[From, To any, Z constraintsExt.Vector[To], X constraintsExt.Vector[Fr
 	})
 }
 
+func unaryConvert[E, F any, Z constraintsExt.Vector[F], X constraintsExt.Vector[E]](z *Z, m *lanes.Bool, x *X, f func(a E) F) {
+	lanes.RangeActive[F](z, m, func(i, j int) {
+		(*z)[i] = f((*x)[i])
+	})
+}
+
 func unaryBool[E any, X constraintsExt.Vector[E]](z, m *lanes.Bool, x *X, f func(a E) bool) {
 	lanes.RangeActive[E](x, m, func(i, j int) {
-		lanes.SetActive(z, i, f((*x)[i]))
+		lanes.Set(z, i, f((*x)[i]))
 	})
 }

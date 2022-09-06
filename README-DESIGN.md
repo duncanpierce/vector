@@ -122,6 +122,9 @@ Because I am generating the different vector sizes packages, `vec2.Deinterlace` 
 * Parallel LoadCorresponding
   * Loads each Bunch in parallel, stopping when the shortest one is full or the first Reader is empty
 * `Truncate` a vector to get a smaller size (ie. split and discard)
+* https://en.wikipedia.org/wiki/Vector_processor
+* https://en.wikipedia.org/wiki/X86_Bit_manipulation_instruction_set
+* https://en.wikipedia.org/wiki/Stream_processing
 
 ## Advantages
 

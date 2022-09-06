@@ -6,16 +6,19 @@ type Bool struct {
 	m uint64
 }
 
-const allBits = 0xffffffffffffffff
+const (
+	allBits         = 0xffffffffffffffff
+	alternatingBits = 0x5555555555555555
+)
 
-func IsActive(m *Bool, i int) bool {
+func IsSet(m *Bool, i int) bool {
 	if m == nil {
 		return true
 	}
 	return (m.m)&(1<<i) != 0
 }
 
-func SetActive(m *Bool, i int, b bool) {
+func Set(m *Bool, i int, b bool) {
 	bit := uint64(1 << i)
 	m.m &^= bit
 	if b {
@@ -23,10 +26,35 @@ func SetActive(m *Bool, i int, b bool) {
 	}
 }
 
+func SetAll(m *Bool) {
+	m.m = allBits
+}
+
+func SetNone(m *Bool) {
+	m.m = 0
+}
+
+func SetAlternating(m *Bool) {
+	m.m = alternatingBits
+}
+
+func SetBlocks(m *Bool, w int) {
+	mask := uint64(0)
+	for j, bit, set, i := w, uint64(1), true, 0; i < 64; i, j, bit = i+1, j-1, bit<<1 {
+		if j <= 0 {
+			j, set = w, !set
+		}
+		if set {
+			mask |= bit
+		}
+	}
+	m.m = mask
+}
+
 func RangeActive[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j int)) {
 	j, l := 0, len(*z)
 	for i := 0; i < l; i++ {
-		if IsActive(m, i) {
+		if IsSet(m, i) {
 			f(i, j)
 			j++
 		}
@@ -36,21 +64,18 @@ func RangeActive[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j i
 func RangeInactive[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j int)) {
 	j, l := 0, len(*z)
 	for i := 0; i < l; i++ {
-		if !IsActive(m, i) {
+		if !IsSet(m, i) {
 			f(i, j)
 			j++
 		}
 	}
 }
 
-func RangeAll[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j int, b bool)) {
-	j, l := 0, len(*z)
+func RangeAll[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i int, b bool)) {
+	l := len(*z)
 	for i := 0; i < l; i++ {
-		active := IsActive(m, i)
-		f(i, j, active)
-		if active {
-			j++
-		}
+		active := IsSet(m, i)
+		f(i, active)
 	}
 }
 
@@ -86,8 +111,4 @@ func Xor(z, x, y *Bool) {
 
 func Not(z, x *Bool) {
 	(*z).m = (*x).m ^ allBits
-}
-
-func All() *Bool {
-	return &Bool{allBits}
 }

@@ -6,6 +6,39 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
+/*
+Merge generalises Copy, Zero, Blend, Permute, Rotate, Shuffle, Reverse.
+z[i] = m[i] ? x[w[i]] : y[w[i]]
+If m == nil, all lanes are active and y has no effect on the result.
+If x == nil, x[i] takes the value of z[i].
+If y == nil, y[i] takes the value of z[i].
+If w == nil, w[i] takes the value of i.
+It is difficult to pass nils from a type-parameterised function because there is no easy way to specify N, the length of the vector.
+*/
+func Merge[E any, W constraintsExt.Vector[int], XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes.Bool, w *W, x, y *XYZ) {
+	if x == nil {
+		x = z
+	}
+	if y == nil {
+		y = z
+	}
+	var temp XYZ
+	lanes.RangeAll[E](z, m, func(i int, b bool) {
+		index := i
+		if w != nil {
+			index = (*w)[i]
+		}
+		if b {
+			temp[i] = (*x)[index]
+		} else {
+			temp[i] = (*y)[index]
+		}
+	})
+	for i := 0; i < len(*z); i++ {
+		(*z)[i] = temp[i]
+	}
+}
+
 func Copy[E any, XZ constraintsExt.Vector[E]](z *XZ, m *lanes.Bool, x *XZ) {
 	unary(z, m, x, func(x E) E {
 		return x
@@ -16,7 +49,7 @@ func Copy[E any, XZ constraintsExt.Vector[E]](z *XZ, m *lanes.Bool, x *XZ) {
 Blend returns a vector with each element drawn from a if the corresponding mask bit in m is set or from b if the bit is not set.
 */
 func Blend[E any, XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes.Bool, x, y *XYZ) {
-	lanes.RangeAll[E](z, m, func(i, j int, b bool) {
+	lanes.RangeAll[E](z, m, func(i int, b bool) {
 		if b {
 			(*z)[i] = (*x)[i]
 		} else {
@@ -74,15 +107,40 @@ func Scatter[E any, Z constraintsExt.Vector[*E], X constraintsExt.Vector[E]](z *
 }
 
 /*
-Shuffle exchanges w consecutive elements from x with their neighbouring elements and writes the result to z.
+Shuffle exchanges w consecutive elements from x with the neighbouring w consecutive elements and writes the result to z.
 When w == 0, Shuffle is equivalent to Copy. When w == 1, each element is exchanged with its neighbour.
 */
-//func Shuffle[E any, XZ constraintsExt.Vector[E]](z *XZ, m *lanes.Bool, w int, x *XZ) {
-//	if w < 0 {
-//		panic("w cannot be less than 0")
-//	}
-//	temp := [64]E{}
-//	for _, xs := temp[:], (*x)[:]; len(xs) > 0; {
-//		//copy(ts, xs[:w])
-//	}
-//}
+func Shuffle[E any, XZ constraintsExt.Vector[E]](z *XZ, w int, x *XZ) {
+	//	if w < 0 {
+	//		panic("w cannot be less than 0")
+	//	}
+	//	temp := [64]E{}
+	//	for _, xs := temp[:], (*x)[:]; len(xs) > 0; {
+	//		//copy(ts, xs[:w])
+	//	}
+}
+
+/*
+Pairs splits vector x, placing alternate consecutive elements of x in z0 and z1. Panics if vectors z0 and z1 are not exactly half the length of x.
+*/
+func Pairs[E any, Z constraintsExt.Vector[E], X constraintsExt.Vector[E]](z0, z1 *Z, x *X) {
+	if len(*z0)*2 != len(*x) {
+		panic("results z0 and z1 must be half the length of x")
+	}
+	for i := 0; i < len(*z0); i++ {
+		j := i * 2
+		(*z0)[i] = (*x)[j]
+		(*z1)[i] = (*x)[j+1]
+	}
+}
+
+/*
+Iota stores incrementing integer values in elements of z.
+TODO should it store i, j or allow caller to decide?
+TODO can only be implemented for complex numbers if we accumulate rather than multiplying (for which type construction complex128(int) does not work)
+*/
+func Iota[E constraintsExt.ConvertableNumber, Z constraintsExt.Vector[E]](z *Z, m *lanes.Bool, start, inc E) {
+	lanes.RangeActive[E](z, m, func(i, j int) {
+		(*z)[i] = start + (E(i) * inc)
+	})
+}
