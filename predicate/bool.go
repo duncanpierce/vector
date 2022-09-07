@@ -1,5 +1,7 @@
 package predicate
 
+import "math/bits"
+
 type Bool struct {
 	m uint64
 }
@@ -34,6 +36,14 @@ func SetNone(m *Bool) {
 
 func SetAlternating(m *Bool) {
 	m.m = alternatingBits
+}
+
+func SetFirst(m *Bool, w int) {
+	m.m = allBits >> (64 - w)
+}
+
+func SetLast(m *Bool, w int) {
+	m.m = allBits << (64 - w)
 }
 
 func SetBlocks(m *Bool, w int) {
@@ -88,6 +98,10 @@ func IsNone(b *Bool) bool {
 		return false
 	}
 	return b.m == 0
+}
+
+func Count(b *Bool) int {
+	return bits.OnesCount64(b.m)
 }
 
 func And(z, x, y *Bool) {

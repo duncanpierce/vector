@@ -33,3 +33,19 @@ func TestPattern64(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestFirst(t *testing.T) {
+	m := &Bool{}
+	SetFirst(m, 10)
+	if m.m != 0b0000000000000000000000000000000000000000000000000000001111111111 {
+		t.Fail()
+	}
+}
+
+func TestLast(t *testing.T) {
+	m := &Bool{}
+	SetLast(m, 10)
+	if m.m != 0b1111111111000000000000000000000000000000000000000000000000000000 {
+		t.Fail()
+	}
+}
