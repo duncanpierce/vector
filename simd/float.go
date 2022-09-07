@@ -12,6 +12,7 @@ func Round[E constraints.Float, XZ constraintsExt.Vector[E]](z *XZ, m *predicate
 		return E(math.Round(float64(x)))
 	})
 }
+
 func RoundToEven[E constraints.Float, XZ constraintsExt.Vector[E]](z *XZ, m *predicate.Bool, x *XZ) {
 	unary[E](z, m, x, func(x E) E {
 		return E(math.RoundToEven(float64(x)))
