@@ -1,6 +1,4 @@
-package lanes
-
-import "github.com/duncanpierce/vector/constraintsExt"
+package predicate
 
 type Bool struct {
 	m uint64
@@ -51,8 +49,8 @@ func SetBlocks(m *Bool, w int) {
 	m.m = mask
 }
 
-func RangeActive[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j int)) {
-	j, l := 0, len(*z)
+func RangeActive(l int, m *Bool, f func(i, j int)) {
+	j := 0
 	for i := 0; i < l; i++ {
 		if IsSet(m, i) {
 			f(i, j)
@@ -61,8 +59,8 @@ func RangeActive[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j i
 	}
 }
 
-func RangeInactive[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j int)) {
-	j, l := 0, len(*z)
+func RangeInactive(l int, m *Bool, f func(i, j int)) {
+	j := 0
 	for i := 0; i < l; i++ {
 		if !IsSet(m, i) {
 			f(i, j)
@@ -71,8 +69,7 @@ func RangeInactive[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i, j
 	}
 }
 
-func RangeAll[E any, Z constraintsExt.Vector[E]](z *Z, m *Bool, f func(i int, b bool)) {
-	l := len(*z)
+func RangeAll(l int, m *Bool, f func(i int, b bool)) {
 	for i := 0; i < l; i++ {
 		active := IsSet(m, i)
 		f(i, active)

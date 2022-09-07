@@ -2,20 +2,20 @@ package simd
 
 import (
 	"github.com/duncanpierce/vector/constraintsExt"
-	"github.com/duncanpierce/vector/simd/lanes"
+	"github.com/duncanpierce/vector/predicate"
 	"golang.org/x/exp/constraints"
 )
 
 /*
 Merge generalises Copy, Zero, Blend, Permute, Rotate, Shuffle, Reverse.
 z[i] = m[i] ? x[w[i]] : y[w[i]]
-If m == nil, all lanes are active and y has no effect on the result.
+If m == nil, all predicate are active and y has no effect on the result.
 If x == nil, x[i] takes the value of z[i].
 If y == nil, y[i] takes the value of z[i].
 If w == nil, w[i] takes the value of i.
 It is difficult to pass nils from a type-parameterised function because there is no easy way to specify N, the length of the vector.
 */
-func Merge[E any, W constraintsExt.Vector[int], XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes.Bool, w *W, x, y *XYZ) {
+func Merge[E any, W constraintsExt.Vector[int], XYZ constraintsExt.Vector[E]](z *XYZ, m *predicate.Bool, w *W, x, y *XYZ) {
 	if x == nil {
 		x = z
 	}
@@ -23,7 +23,7 @@ func Merge[E any, W constraintsExt.Vector[int], XYZ constraintsExt.Vector[E]](z 
 		y = z
 	}
 	var temp XYZ
-	lanes.RangeAll[E](z, m, func(i int, b bool) {
+	predicate.RangeAll(len(*z), m, func(i int, b bool) {
 		index := i
 		if w != nil {
 			index = (*w)[i]
@@ -39,7 +39,7 @@ func Merge[E any, W constraintsExt.Vector[int], XYZ constraintsExt.Vector[E]](z 
 	}
 }
 
-func Copy[E any, XZ constraintsExt.Vector[E]](z *XZ, m *lanes.Bool, x *XZ) {
+func Copy[E any, XZ constraintsExt.Vector[E]](z *XZ, m *predicate.Bool, x *XZ) {
 	unary(z, m, x, func(x E) E {
 		return x
 	})
@@ -48,8 +48,8 @@ func Copy[E any, XZ constraintsExt.Vector[E]](z *XZ, m *lanes.Bool, x *XZ) {
 /*
 Blend returns a vector with each element drawn from a if the corresponding mask bit in m is set or from b if the bit is not set.
 */
-func Blend[E any, XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes.Bool, x, y *XYZ) {
-	lanes.RangeAll[E](z, m, func(i int, b bool) {
+func Blend[E any, XYZ constraintsExt.Vector[E]](z *XYZ, m *predicate.Bool, x, y *XYZ) {
+	predicate.RangeAll(len(*z), m, func(i int, b bool) {
 		if b {
 			(*z)[i] = (*x)[i]
 		} else {
@@ -61,9 +61,9 @@ func Blend[E any, XYZ constraintsExt.Vector[E]](z *XYZ, m *lanes.Bool, x, y *XYZ
 /*
 Zero sets elements of a vector to their default (zero) value where the corresponding mask bit in m is not set.
 */
-func Zero[E any, Z constraintsExt.Vector[E]](z *Z, m *lanes.Bool) {
+func Zero[E any, Z constraintsExt.Vector[E]](z *Z, m *predicate.Bool) {
 	var zero E
-	lanes.RangeInactive[E](z, m, func(i, j int) {
+	predicate.RangeInactive(len(*z), m, func(i, j int) {
 		(*z)[i] = zero
 	})
 }
@@ -71,8 +71,8 @@ func Zero[E any, Z constraintsExt.Vector[E]](z *Z, m *lanes.Bool) {
 /*
 Permute sets vector z to elements from x selected using indices in y. An element from x may appear more than once in the result, or may be absent.
 */
-func Permute[E any, I constraints.Integer, XZ constraintsExt.Vector[E], Y constraintsExt.Vector[I]](z *XZ, m *lanes.Bool, x *XZ, y *Y) {
-	lanes.RangeActive[E](z, m, func(i, j int) {
+func Permute[E any, I constraints.Integer, XZ constraintsExt.Vector[E], Y constraintsExt.Vector[I]](z *XZ, m *predicate.Bool, x *XZ, y *Y) {
+	predicate.RangeActive(len(*z), m, func(i, j int) {
 		index := (*y)[i]
 		(*z)[i] = (*x)[index]
 	})
@@ -81,8 +81,8 @@ func Permute[E any, I constraints.Integer, XZ constraintsExt.Vector[E], Y constr
 /*
 Gather sets elements of z to the values referenced by pointers in x.
 */
-func Gather[E any, Z constraintsExt.Vector[E], X constraintsExt.Vector[*E]](z *Z, m *lanes.Bool, x *X) {
-	lanes.RangeActive[E](z, m, func(i, j int) {
+func Gather[E any, Z constraintsExt.Vector[E], X constraintsExt.Vector[*E]](z *Z, m *predicate.Bool, x *X) {
+	predicate.RangeActive(len(*z), m, func(i, j int) {
 		(*z)[i] = *(*x)[i]
 	})
 }
@@ -90,8 +90,8 @@ func Gather[E any, Z constraintsExt.Vector[E], X constraintsExt.Vector[*E]](z *Z
 /*
 Address sets elements of vector z to the addresses of slice elements in x, indexed by y.
 */
-func Address[E any, Z constraintsExt.Vector[*E], X constraintsExt.Vector[[]E], Y constraintsExt.Vector[int]](z *Z, m *lanes.Bool, x *X, y *Y) {
-	lanes.RangeActive[*E](z, m, func(i, j int) {
+func Address[E any, Z constraintsExt.Vector[*E], X constraintsExt.Vector[[]E], Y constraintsExt.Vector[int]](z *Z, m *predicate.Bool, x *X, y *Y) {
+	predicate.RangeActive(len(*z), m, func(i, j int) {
 		index := (*y)[i]
 		(*z)[i] = &((*x)[i][index])
 	})
@@ -100,8 +100,8 @@ func Address[E any, Z constraintsExt.Vector[*E], X constraintsExt.Vector[[]E], Y
 /*
 Scatter sets values pointed to by elements of z to corresponding values in x.
 */
-func Scatter[E any, Z constraintsExt.Vector[*E], X constraintsExt.Vector[E]](z *Z, m *lanes.Bool, x *X) {
-	lanes.RangeActive[*E](z, m, func(i, j int) {
+func Scatter[E any, Z constraintsExt.Vector[*E], X constraintsExt.Vector[E]](z *Z, m *predicate.Bool, x *X) {
+	predicate.RangeActive(len(*z), m, func(i, j int) {
 		*(*z)[i] = (*x)[i]
 	})
 }
@@ -139,8 +139,8 @@ Iota stores incrementing integer values in elements of z.
 TODO should it store i, j or allow caller to decide?
 TODO can only be implemented for complex numbers if we accumulate rather than multiplying (for which type construction complex128(int) does not work)
 */
-func Iota[E constraintsExt.ConvertableNumber, Z constraintsExt.Vector[E]](z *Z, m *lanes.Bool, start, inc E) {
-	lanes.RangeActive[E](z, m, func(i, j int) {
+func Iota[E constraintsExt.ConvertableNumber, Z constraintsExt.Vector[E]](z *Z, m *predicate.Bool, start, inc E) {
+	predicate.RangeActive(len(*z), m, func(i, j int) {
 		(*z)[i] = start + (E(i) * inc)
 	})
 }

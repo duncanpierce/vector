@@ -1,7 +1,7 @@
 package simd
 
 import (
-	"github.com/duncanpierce/vector/simd/lanes"
+	"github.com/duncanpierce/vector/predicate"
 	"reflect"
 	"testing"
 )
@@ -16,19 +16,19 @@ func TestAddBroadcast(t *testing.T) {
 		t.Fail()
 	}
 
-	m := lanes.Bool{}
+	m := predicate.Bool{}
 	Equal[int](&m, nil, &z, &[4]int{11, 11, 11, 11})
 
-	if !lanes.IsSet(&m, 0) {
+	if !predicate.IsSet(&m, 0) {
 		t.Fail()
 	}
-	if lanes.IsSet(&m, 1) {
+	if predicate.IsSet(&m, 1) {
 		t.Fail()
 	}
-	if !lanes.IsSet(&m, 2) {
+	if !predicate.IsSet(&m, 2) {
 		t.Fail()
 	}
-	if lanes.IsSet(&m, 3) {
+	if predicate.IsSet(&m, 3) {
 		t.Fail()
 	}
 
